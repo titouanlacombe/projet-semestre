@@ -1,4 +1,20 @@
-1. Faire le projet
-2. Profit ?
+Cahier des charges:
 
+- Java
+- Java Front API: Swing ??
+- Java Model–view–controller Archi
+- DB SQL: ?? posgre SQL / mySQL (Comment faire marcher en local ? localhost? docker?)
+- Sujet Gestion biblio musicale
+- Suggestions?
+- Recherche (par artiste / titre / album etc...)
+- Outils ? genre recupération des paroles avec api + album / single image / detection de collision (same titre & auteur)
+- UI Clean (2 themes clair / sombre)
+- Playlistes dynamiques
+- Déploiment
+- Explorateur de fichiers local ?
+- Pages pour (titre / artistes / albums) ?
 
+- Electron js & SQLlite ?
+- Ou Django & PosgreSQL & 
+
+file clef princiale? what ?
