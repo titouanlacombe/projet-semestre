@@ -3,5 +3,7 @@ https://docs.google.com/document/d/1maEiRUrZ5rS7LMbFP0BVT9Tz4JJUHqTBSA_U6Df0gtg/
 
 SQLite: https://www.npmjs.com/package/sqlite3
 
+create npm scripts for build with windows
+
 Important:
 Note: Since Electron embeds Node.js into its binary, the version of Node.js running your code is unrelated to the version running on your system.
