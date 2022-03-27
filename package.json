@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/titouanlacombe/projet-semestre#readme",
   "devDependencies": {
+    "@electron-forge/cli": "^6.0.0-beta.63",
     "electron": "^17.2.0",
     "sqlite3": "^4.2.0"
   }
