@@ -11,7 +11,7 @@ npm-rm-proxy:
 
 install-dependencies:
 	${PKGMNG_UPDATE}
-	${PKGMNG_INSTALL} curl npm nodejs
+	${PKGMNG_INSTALL} curl npm nodejs python
 
 setup:
 	npm install
