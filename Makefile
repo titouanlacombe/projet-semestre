@@ -1,4 +1,4 @@
-.PHONY: setup build
+.PHONY: npm-rm-proxy install-dependencies setup build clean
 .DEFAULT_GOAL := build
 
 PKGMNG_UPDATE=apt update && apt upgrade -y
@@ -9,9 +9,11 @@ npm-rm-proxy:
 	npm config rm proxy
 	npm config rm https-proxy
 
-setup:
+install-dependencies:
 	${PKGMNG_UPDATE}
 	${PKGMNG_INSTALL} curl npm nodejs
+
+setup:
 	npm install
 
 build:
