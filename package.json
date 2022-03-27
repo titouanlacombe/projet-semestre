@@ -1,0 +1,27 @@
+{
+  "name": "wavia",
+  "version": "1.0.0",
+  "description": "An electron.js app to manage & enjoy your local music",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/titouanlacombe/projet-semestre.git"
+  },
+  "keywords": [
+    "music",
+    "electronjs"
+  ],
+  "author": "Titouan Lacombe & Nathan Barbier",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/titouanlacombe/projet-semestre/issues"
+  },
+  "homepage": "https://github.com/titouanlacombe/projet-semestre#readme",
+  "devDependencies": {
+    "electron": "^17.2.0",
+    "sqlite3": "^4.2.0"
+  }
+}

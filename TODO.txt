@@ -1,19 +1,7 @@
 Cahier des charges:
+https://docs.google.com/document/d/1maEiRUrZ5rS7LMbFP0BVT9Tz4JJUHqTBSA_U6Df0gtg/edit?usp=sharing
 
-- Java
-- Java Front API: Swing ??
-- Java Model–view–controller Archi
-- DB SQL: ?? posgre SQL / mySQL (Comment faire marcher en local ? localhost? docker?)
-- Sujet Gestion biblio musicale
-- Suggestions?
-- Recherche (par artiste / titre / album etc...)
-- Outils ? genre recupération des paroles avec api + album / single image / detection de collision (same titre & auteur)
-- UI Clean (2 themes clair / sombre)
-- Playlistes dynamiques
-- Déploiment
-- Explorateur de fichiers local ?
-- Pages pour (titre / artistes / albums) ?
+SQLite: https://www.npmjs.com/package/sqlite3
 
-- Electron js & SQLite (https://www.npmjs.com/package/sqlite3)
-
-file clef princiale? what ?
+Important:
+Note: Since Electron embeds Node.js into its binary, the version of Node.js running your code is unrelated to the version running on your system.
