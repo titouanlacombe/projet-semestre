@@ -14,7 +14,6 @@ Cahier des charges:
 - Explorateur de fichiers local ?
 - Pages pour (titre / artistes / albums) ?
 
-- Electron js & SQLlite ?
-- Ou Django & PosgreSQL & 
+- Electron js & SQLite (https://www.npmjs.com/package/sqlite3)
 
 file clef princiale? what ?
