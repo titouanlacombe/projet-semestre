@@ -2,7 +2,7 @@
   "name": "wavia",
   "version": "1.0.0",
   "description": "An electron.js app to manage & enjoy your local music",
-  "main": "main.js",
+  "main": "app/main.js",
   "scripts": {
     "start": "electron ."
   },
