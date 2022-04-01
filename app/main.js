@@ -1,5 +1,6 @@
 const { app, BrowserWindow } = require('electron');
 const path = require('path');
+const sidebar = require('./Sidebar');
 
 function createWindow()
 {
@@ -7,7 +8,8 @@ function createWindow()
         width: 800,
         height: 600,
         webPreferences: {
-            preload: path.resolve('app/preload.js')
+            preload: path.resolve('app/preload.js'),
+            nodeIntegration: true,
         }
     });
 
@@ -24,6 +26,9 @@ app.whenReady().then(() =>
             createWindow();
         }
     });
+
+    console.log(sidebar);
+    sidebar.load();
 });
 
 app.on('window-all-closed', () =>
