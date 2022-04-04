@@ -36,7 +36,7 @@ async function appendFiles(folder)
 	}
 }
 
-function initFileExplorer()
+export function initFileExplorer()
 {
 	const rootFolder = ".";
 	const root = document.getElementById(separator);
@@ -44,8 +44,3 @@ function initFileExplorer()
 	root.id += rootFolder;
 	appendFiles(rootFolder);
 }
-
-window.addEventListener('DOMContentLoaded', () =>
-{
-	initFileExplorer();
-});
