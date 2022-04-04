@@ -1,10 +1,9 @@
-async function loadFilesExplorer()
+async function appendFiles(parent, folder)
 {
-	const filesParent = document.getElementById("filesRoot");
-	const files = await window.electronAPI.getFiles(".")
+	const files = await window.electronAPI.getFiles(folder);
 
 	for (const file of files) {
-		let child = filesParent.appendChild(document.createElement("li"));
+		let child = parent.appendChild(document.createElement("li"));
 		child.innerText = file;
 		child.className = "file";
 	}
@@ -12,5 +11,5 @@ async function loadFilesExplorer()
 
 window.addEventListener('DOMContentLoaded', () =>
 {
-	loadFilesExplorer();
+	appendFiles(document.getElementById("filesRoot"), ".");
 });
