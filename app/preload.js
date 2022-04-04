@@ -1,5 +1,5 @@
 const { contextBridge, ipcRenderer } = require('electron')
 
 contextBridge.exposeInMainWorld('electronAPI', {
-    openFile: (fPath) => ipcRenderer.invoke('dialog:openFile', fPath)
+    getFiles: (fPath) => ipcRenderer.invoke('getFiles', fPath)
 })

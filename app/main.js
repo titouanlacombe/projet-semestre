@@ -1,11 +1,11 @@
-const { app, BrowserWindow, ipcMain, dialog } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const fs = require('fs');
 
 app.whenReady().then(() =>
 {
     // Load API
-    ipcMain.handle('dialog:openFile', (event, fPath) =>
+    ipcMain.handle('getFiles', (event, fPath) =>
     {
         return fs.readdirSync(fPath);
     });
