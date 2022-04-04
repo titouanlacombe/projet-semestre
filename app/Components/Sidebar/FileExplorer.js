@@ -5,7 +5,6 @@ function initFile(file, fullPath)
 {
 	file.className = "file";
 	file.dataset.opened = "false";
-	file.dataset.loaded = "false";
 
 	file.dataset.fullPath = fullPath;
 	file.id = idKey + file.dataset.fullPath;
@@ -34,44 +33,33 @@ async function loadFiles(folder)
 	return list;
 }
 
-function getChildList(folder)
+function getChilds(folder)
 {
 	return document.getElementById(idKey + folder.dataset.fullPath + childsKey);
 }
 
 async function openFolder(folder)
 {
-	// Wether data is already loaded or not
-	if (JSON.parse(folder.dataset.loaded)) {
-		// Get child list & show it
-		const childs = getChildList(folder);
+	let childs = getChilds(folder);
 
-		childs.hidden = false;
-	}
-	else {
-		// Create files element
-		const files = await loadFiles(folder);
+	// If child list not exist create & cache it
+	if (childs === null) {
+		// Create child list
+		childs = await loadFiles(folder);
 
 		// Append it after folder
-		folder.after(files);
-
-		// Update folder loaded status
-		folder.dataset.loaded = "true";
+		folder.after(childs);
 	}
 
-	// Update folder opened status
-	folder.dataset.opened = "true";
+	childs.hidden = false;
 }
 
 function closeFolder(folder)
 {
 	// Get childs list & hide it
-	const childs = getChildList(folder);
+	let childs = getChilds(folder);
 
 	childs.hidden = true;
-
-	// Update folder opened status
-	folder.dataset.opened = "false";
 }
 
 function toggleFolder(folderPath)
@@ -79,8 +67,13 @@ function toggleFolder(folderPath)
 	// Get folder element
 	const folder = document.getElementById(idKey + folderPath);
 
+	let opened = JSON.parse(folder.dataset.opened);
+
 	// Open if closed & vice versa
-	JSON.parse(folder.dataset.opened) ? closeFolder(folder) : openFolder(folder);
+	opened ? closeFolder(folder) : openFolder(folder);
+
+	// Toggle opened
+	folder.dataset.opened = !opened;
 }
 
 export function initFileExplorer()
