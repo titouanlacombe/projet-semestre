@@ -4,39 +4,39 @@ const fs = require('fs');
 
 app.whenReady().then(() =>
 {
-    // Load API
-    ipcMain.handle('getFiles', (event, fPath) =>
-    {
-        return fs.readdirSync(fPath);
-    });
+	// Load API
+	ipcMain.handle('getFiles', (event, fPath) =>
+	{
+		return fs.readdirSync(fPath);
+	});
 
-    // Framework
-    createWindow();
+	// Framework
+	createWindow();
 
-    app.on('activate', () =>
-    {
-        if (BrowserWindow.getAllWindows().length === 0) {
-            createWindow();
-        }
-    });
+	app.on('activate', () =>
+	{
+		if (BrowserWindow.getAllWindows().length === 0) {
+			createWindow();
+		}
+	});
 });
 
 function createWindow()
 {
-    const win = new BrowserWindow({
-        width: 800,
-        height: 600,
-        webPreferences: {
-            preload: path.resolve('app/preload.js'),
-        }
-    });
+	const win = new BrowserWindow({
+		width: 800,
+		height: 600,
+		webPreferences: {
+			preload: path.resolve('app/preload.js'),
+		}
+	});
 
-    win.loadFile('app/index.html');
+	win.loadFile('app/index.html');
 }
 
 app.on('window-all-closed', () =>
 {
-    if (process.platform !== 'darwin') {
-        app.quit();
-    }
+	if (process.platform !== 'darwin') {
+		app.quit();
+	}
 });
