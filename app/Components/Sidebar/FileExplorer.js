@@ -45,6 +45,8 @@ async function openFolder(folder)
 	if (JSON.parse(folder.dataset.loaded)) {
 		// Get child list & show it
 		const childs = getChildList(folder);
+
+		childs.hidden = false;
 	}
 	else {
 		// Create files element
@@ -65,6 +67,8 @@ function closeFolder(folder)
 {
 	// Get childs list & hide it
 	const childs = getChildList(folder);
+
+	childs.hidden = true;
 
 	// Update folder opened status
 	folder.dataset.opened = "false";
