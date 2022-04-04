@@ -5,7 +5,10 @@ const fs = require('fs');
 app.whenReady().then(() =>
 {
     // Load API
-    ipcMain.handle('dialog:openFile', () => { return fs.readdirSync("."); });
+    ipcMain.handle('dialog:openFile', (event, fPath) =>
+    {
+        return fs.readdirSync(fPath);
+    });
 
     // Framework
     createWindow();
