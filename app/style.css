@@ -4,7 +4,7 @@ body {
 
 #sidebar {
 	height: 100%;
-	width: 160px;
+	width: 200px;
 	position: fixed;
 	z-index: 1;
 	top: 0;
@@ -14,27 +14,30 @@ body {
 	padding: 4px 4px 4px 8px;
 }
 
-#sidebar ul {
+#sidebar div {
 	padding: 0px;
 	margin: 0px;
 }
 
+#sidebar ul {
+	padding: 0px;
+	margin: 0px;
+	margin-left: 12px;
+}
+
 #sidebar li {
-	padding: 2px 0px 2px 0px;
+	padding: 4px 4px 4px 4px;
 	text-decoration: none;
 	font-size: 15px;
-	color: #b6b6b6;
+	color: #ffffff;
 	display: block;
 }
 
 #sidebar li:hover {
-	color: #ffffff;
+	background-color: rgb(44, 44, 44);
 }
 
 .main {
-	margin-left: 160px;
 	/* Same as the width of the sidenav */
-	font-size: 28px;
-	/* Increased text to enable scrolling */
-	padding: 0px 10px;
+	margin-left: 200px;
 }
