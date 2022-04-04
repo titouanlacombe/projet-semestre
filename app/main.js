@@ -5,8 +5,7 @@ const fs = require('fs');
 app.whenReady().then(() =>
 {
     // Load API
-    // let files = fs.readdirSync(".");
-    ipcMain.handle('dialog:openFile', () => { return ["hello"]; });
+    ipcMain.handle('dialog:openFile', () => { return fs.readdirSync("."); });
 
     // Framework
     createWindow();
@@ -26,7 +25,6 @@ function createWindow()
         height: 600,
         webPreferences: {
             preload: path.resolve('app/preload.js'),
-            nodeIntegration: true,
         }
     });
 

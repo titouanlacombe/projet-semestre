@@ -1,20 +1,16 @@
-async function loadSidebar()
+async function loadFilesExplorer()
 {
-	const sidebar = document.getElementById("sidebar");
+	const filesParent = document.getElementById("filesRoot");
 	const files = await window.electronAPI.openFile()
 
-	console.log("loading sidebar: " + files);
-
 	for (const file of files) {
-		let child = sidebar.appendChild(document.createElement("p"));
+		let child = filesParent.appendChild(document.createElement("li"));
 		child.innerText = file;
 		child.className = "file";
 	}
-
-	console.log("loaded sidebar: " + sidebar);
 }
 
 window.addEventListener('DOMContentLoaded', () =>
 {
-	loadSidebar();
+	loadFilesExplorer();
 });

@@ -1,5 +1,5 @@
 body {
-	font-family: "Lato", sans-serif;
+	font-family: Verdana, sans-serif;
 }
 
 #sidebar {
@@ -11,19 +11,24 @@ body {
 	left: 0;
 	background-color: #111;
 	overflow-x: hidden;
-	padding-top: 20px;
+	padding: 4px 4px 4px 8px;
 }
 
-#sidebar p {
-	padding: 6px 8px 6px 16px;
+#sidebar ul {
+	padding: 0px;
+	margin: 0px;
+}
+
+#sidebar li {
+	padding: 2px 0px 2px 0px;
 	text-decoration: none;
-	font-size: 25px;
-	color: #818181;
+	font-size: 15px;
+	color: #b6b6b6;
 	display: block;
 }
 
-#sidebar p:hover {
-	color: #f1f1f1;
+#sidebar li:hover {
+	color: #ffffff;
 }
 
 .main {
@@ -32,14 +37,4 @@ body {
 	font-size: 28px;
 	/* Increased text to enable scrolling */
 	padding: 0px 10px;
-}
-
-@media screen and (max-height: 450px) {
-	#sidebar {
-		padding-top: 15px;
-	}
-
-	#sidebar a {
-		font-size: 18px;
-	}
 }
