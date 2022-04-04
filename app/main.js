@@ -13,6 +13,7 @@ app.whenReady().then(() =>
 	// Framework
 	createWindow();
 
+	// For macOS
 	app.on('activate', () =>
 	{
 		if (BrowserWindow.getAllWindows().length === 0) {
@@ -29,11 +30,14 @@ function createWindow()
 		}
 	});
 
+	win.maximize();
+
 	win.loadFile('app/index.html');
 }
 
 app.on('window-all-closed', () =>
 {
+	// For macOS
 	if (process.platform !== 'darwin') {
 		app.quit();
 	}
