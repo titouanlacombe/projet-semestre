@@ -42,7 +42,7 @@ body {
 	background-color: rgb(44, 44, 44);
 }
 
-.main {
+#player {
 	/* Same as the width of the sidenav */
 	margin-left: 200px;
 	padding: 10px;
@@ -52,7 +52,7 @@ body {
 	background-color: rgb(17, 17, 17);
 }
 
-.main p {
+#player p {
 	margin: 0px;
 	padding: 5px;
 }
