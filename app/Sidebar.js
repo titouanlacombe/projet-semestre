@@ -1,22 +1,20 @@
-const fs = require('fs');
-const path = require('path');
-
-class Sidebar
+async function loadSidebar()
 {
-	get()
-	{
-		return document.getElementById("sidebar");
+	const sidebar = document.getElementById("sidebar");
+	const files = await window.electronAPI.openFile()
+
+	console.log("loading sidebar: " + files);
+
+	for (const file of files) {
+		let child = sidebar.appendChild(document.createElement("p"));
+		child.innerText = file;
+		child.className = "file";
 	}
 
-	load()
-	{
-		let files = fs.readdirSync(".");
-		let sidebar = this.get();
-		for (const file of files) {
-			let child = sidebar.appendChild("p");
-			child.innerHTML = path.basename(file);
-		}
-	}
+	console.log("loaded sidebar: " + sidebar);
 }
 
-module.exports = new Sidebar();
+window.addEventListener('DOMContentLoaded', () =>
+{
+	loadSidebar();
+});
