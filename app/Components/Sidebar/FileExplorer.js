@@ -1,46 +1,90 @@
-const separator = "fileExplorer://";
+const idKey = "fileExplorer://";
+const childsKey = ":childs";
 
-function folderOpened(folder)
+function initFile(file, fullPath)
 {
-	return JSON.parse(document.getElementById(separator + folder).dataset.opened);
+	file.className = "file";
+	file.dataset.opened = "false";
+	file.dataset.loaded = "false";
+
+	file.dataset.fullPath = fullPath;
+	file.id = idKey + file.dataset.fullPath;
+	file.onclick = () => toggleFolder(file.dataset.fullPath);
 }
 
-async function appendFiles(folder)
+async function loadFiles(folder)
 {
-	// Get parent and add after wrapper list
+	// Call API for files
+	const files = await window.electronAPI.getFiles(folder.dataset.fullPath);
+
+	// Create wrapper list
 	const list = document.createElement("ul");
-	const parent = document.getElementById(separator + folder)
-	parent.after(list);
-	parent.dataset.opened = "true";
+	list.id = idKey + folder.dataset.fullPath + childsKey;
 
-	const files = await window.electronAPI.getFiles(folder);
+	// Create childs & fill list
+	for (const fileName of files) {
 
-	for (const file of files) {
-		let filePath = folder + "/" + file;
+		const child = document.createElement("li");
+		initFile(child, folder.dataset.fullPath + "/" + fileName);
+		child.innerText = fileName;
 
-		let child = list.appendChild(document.createElement("li"));
-
-		child.innerText = file;
-		child.className = "file";
-		child.id = separator + filePath;
-		child.dataset.opened = "false";
-		child.onclick = () =>
-		{
-			// Precondition
-			if (folderOpened(filePath)) {
-				return;
-			}
-
-			appendFiles(filePath);
-		};
+		list.appendChild(child);
 	}
+
+	return list;
+}
+
+function getChildList(folder)
+{
+	return document.getElementById(idKey + folder.dataset.fullPath + childsKey);
+}
+
+async function openFolder(folder)
+{
+	// Wether data is already loaded or not
+	if (JSON.parse(folder.dataset.loaded)) {
+		// Get child list & show it
+		const childs = getChildList(folder);
+	}
+	else {
+		// Create files element
+		const files = await loadFiles(folder);
+
+		// Append it after folder
+		folder.after(files);
+
+		// Update folder loaded status
+		folder.dataset.loaded = "true";
+	}
+
+	// Update folder opened status
+	folder.dataset.opened = "true";
+}
+
+function closeFolder(folder)
+{
+	// Get childs list & hide it
+	const childs = getChildList(folder);
+
+	// Update folder opened status
+	folder.dataset.opened = "false";
+}
+
+function toggleFolder(folderPath)
+{
+	// Get folder element
+	const folder = document.getElementById(idKey + folderPath);
+
+	// Open if closed & vice versa
+	JSON.parse(folder.dataset.opened) ? closeFolder(folder) : openFolder(folder);
 }
 
 export function initFileExplorer()
 {
-	const rootFolder = ".";
-	const root = document.getElementById(separator);
+	// Setup root element
+	let root = document.getElementById(idKey);
+	initFile(root, ".");
 
-	root.id += rootFolder;
-	appendFiles(rootFolder);
+	// Init root
+	toggleFolder(root.dataset.fullPath);
 }
