@@ -1,6 +1,11 @@
 const idKey = "fileExplorer://";
 const childsKey = ":childs";
 
+// Icons
+const fileIcon = "bi-file-earmark";
+const folderOpenedIcon = "bi-folder2-open";
+const folderClosedIcon = "bi-folder2";
+
 function initFile(file, fullPath)
 {
 	file.className = "file";
@@ -9,6 +14,14 @@ function initFile(file, fullPath)
 	file.dataset.fullPath = fullPath;
 	file.id = idKey + file.dataset.fullPath;
 	file.onclick = () => toggleFolder(file.dataset.fullPath);
+}
+
+function createIcon(name)
+{
+	const icon = document.createElement("i");
+	icon.className = name;
+	icon.style = "padding-right: 8px;";
+	return icon;
 }
 
 async function loadFiles(folder)
@@ -23,9 +36,13 @@ async function loadFiles(folder)
 	// Create childs & fill list
 	for (const fileName of files) {
 
+		// File / Folder icon
+		const icon = createIcon(fileIcon);
+
 		const child = document.createElement("li");
 		initFile(child, folder.dataset.fullPath + "/" + fileName);
-		child.innerText = fileName;
+		child.appendChild(icon);
+		child.innerHTML += fileName;
 
 		list.appendChild(child);
 	}
