@@ -3,8 +3,8 @@ const childsKey = ":childs";
 
 // Icons
 const fileIcon = "bi-file-earmark";
-const folderOpenedIcon = "bi-folder2-open";
-const folderClosedIcon = "bi-folder2";
+const dirOpenedIcon = "bi-folder2-open";
+const dirClosedIcon = "bi-folder2";
 
 function initFile(file, fullPath)
 {
@@ -34,15 +34,15 @@ async function loadFiles(folder)
 	list.id = idKey + folder.dataset.fullPath + childsKey;
 
 	// Create childs & fill list
-	for (const fileName of files) {
+	for (const file of files) {
 
 		// File / Folder icon
-		const icon = createIcon(fileIcon);
+		const icon = createIcon(file.isDir ? dirClosedIcon : fileIcon);
 
 		const child = document.createElement("li");
-		initFile(child, folder.dataset.fullPath + "/" + fileName);
+		initFile(child, folder.dataset.fullPath + "/" + file.name);
 		child.appendChild(icon);
-		child.innerHTML += fileName;
+		child.innerHTML += file.name;
 
 		list.appendChild(child);
 	}
@@ -93,11 +93,12 @@ function toggleFolder(folderPath)
 	folder.dataset.opened = !opened;
 }
 
-export function initFileExplorer()
+export async function initFileExplorer()
 {
 	// Setup root element
 	let root = document.getElementById(idKey);
-	initFile(root, ".");
+	const homeDirPath = await window.electronAPI.getHomeDir();
+	initFile(root, homeDirPath);
 
 	// Init root
 	toggleFolder(root.dataset.fullPath);

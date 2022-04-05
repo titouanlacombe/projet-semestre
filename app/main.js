@@ -5,9 +5,33 @@ const fs = require('fs');
 app.whenReady().then(() =>
 {
 	// Load API
-	ipcMain.handle('getFiles', (event, fPath) =>
+	ipcMain.handle('getFiles', (event, dirPath) =>
 	{
-		return fs.readdirSync(fPath);
+		const files = fs.readdirSync(dirPath);
+
+		let results = [];
+		for (const file of files) {
+
+			let fullPath = dirPath + "/" + file;
+
+			try {
+				results.push({
+					"name": file,
+					"isDir": fs.statSync(fullPath).isDirectory()
+				});
+			}
+			catch (error) {
+				console.log("Error: failed to generate file object for '" + fullPath + "' cause: ");
+				console.log(error);
+			}
+		}
+
+		return results;
+	});
+
+	ipcMain.handle('getHomeDir', () =>
+	{
+		return app.getPath('home');
 	});
 
 	// Framework
