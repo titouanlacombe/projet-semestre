@@ -1,9 +1,10 @@
 Cahier des charges:
 https://docs.google.com/document/d/1maEiRUrZ5rS7LMbFP0BVT9Tz4JJUHqTBSA_U6Df0gtg/edit?usp=sharing
 
-SQLite: https://www.npmjs.com/package/sqlite3
+clean api files
+open / close folder
+ignore hidden files
+https://stackabuse.com/a-sqlite-tutorial-with-node-js/
 
-create npm scripts for build with windows
-
-Important:
-Note: Since Electron embeds Node.js into its binary, the version of Node.js running your code is unrelated to the version running on your system.
+create npm scripts for build with windows (flemme)
+configure root folder with OS file explorer
