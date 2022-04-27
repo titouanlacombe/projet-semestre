@@ -1,10 +1,19 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const fs = require('fs');
+const db = require('./main/Database');
 
 app.whenReady().then(() =>
 {
 	// Load API
+	ipcMain.handle('runSQL', async (event, method, sql, params) =>
+	{
+		await new Promise(resolve =>
+		{
+			db[method](sql, params, response => resolve(response));
+		});
+	});
+
 	ipcMain.handle('getFiles', (event, dirPath) =>
 	{
 		const files = fs.readdirSync(dirPath);
