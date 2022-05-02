@@ -37,8 +37,8 @@ app.whenReady().then(() => {
         return app.getPath('home');
     });
 
-    ipcMain.handle('loadAlbum',);
-    ipcMain.handle('loadTitle',);
+    // ipcMain.handle('loadAlbum',);
+    // ipcMain.handle('loadTitle',);
 
     // Framework
     createWindow();
