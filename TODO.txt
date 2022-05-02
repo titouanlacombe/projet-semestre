@@ -8,3 +8,5 @@ https://stackabuse.com/a-sqlite-tutorial-with-node-js/
 
 create npm scripts for build with windows (flemme)
 configure root folder with OS file explorer
+
+Sidebar as electron menu

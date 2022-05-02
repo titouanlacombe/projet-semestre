@@ -2,68 +2,72 @@ const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const fs = require('fs');
 
-app.whenReady().then(() =>
-{
-	// Load API
-	ipcMain.handle('getFiles', (event, dirPath) =>
-	{
-		const files = fs.readdirSync(dirPath);
+// function handleSetTitle(event, title) {
+//     const webContents = event.sender
+//     const win = BrowserWindow.fromWebContents(webContents)
+//     win.setTitle(title)
+// }
 
-		let results = [];
-		for (const file of files) {
+app.whenReady().then(() => {
+    // Load API
+    ipcMain.handle('getFiles', (event, dirPath) => {
+        const files = fs.readdirSync(dirPath);
 
-			let fullPath = dirPath + "/" + file;
+        let results = [];
+        for (const file of files) {
 
-			try {
-				results.push({
-					"name": file,
-					"isDir": fs.statSync(fullPath).isDirectory()
-				});
-			}
-			catch (error) {
-				console.log("Error: failed to generate file object for '" + fullPath + "' cause: ");
-				console.log(error);
-			}
-		}
+            let fullPath = dirPath + "/" + file;
 
-		return results;
-	});
+            try {
+                results.push({
+                    "name": file,
+                    "isDir": fs.statSync(fullPath).isDirectory()
+                });
+            }
+            catch (error) {
+                console.log("Error: failed to generate file object for '" + fullPath + "' cause: ");
+                console.log(error);
+            }
+        }
 
-	ipcMain.handle('getHomeDir', () =>
-	{
-		return app.getPath('home');
-	});
+        return results;
+    });
 
-	// Framework
-	createWindow();
+    ipcMain.handle('getHomeDir', () => {
+        return app.getPath('home');
+    });
 
-	// For macOS
-	app.on('activate', () =>
-	{
-		if (BrowserWindow.getAllWindows().length === 0) {
-			createWindow();
-		}
-	});
+    ipcMain.handle('loadAlbum',);
+    ipcMain.handle('loadTitle',);
+
+    // Framework
+    createWindow();
+
+    // For macOS
+    app.on('activate', () => {
+        if (BrowserWindow.getAllWindows().length === 0) {
+            createWindow();
+        }
+    });
 });
 
-function createWindow()
-{
-	const win = new BrowserWindow({
-		icon: "./resources/icon.png",
-		webPreferences: {
-			preload: path.resolve('app/preload.js'),
-		}
-	});
+function createWindow() {
+    const win = new BrowserWindow({
+        autoHideMenuBar: true,
+        icon: "./resources/icon.png",
+        webPreferences: {
+            preload: path.resolve('app/preload.js'),
+        }
+    });
 
-	win.maximize();
+    win.maximize();
 
-	win.loadFile('app/index.html');
+    win.loadFile('app/index.html');
 }
 
-app.on('window-all-closed', () =>
-{
-	// For macOS
-	if (process.platform !== 'darwin') {
-		app.quit();
-	}
+app.on('window-all-closed', () => {
+    // For macOS
+    if (process.platform !== 'darwin') {
+        app.quit();
+    }
 });
