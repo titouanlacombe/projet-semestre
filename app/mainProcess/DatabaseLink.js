@@ -34,7 +34,14 @@ class Database
 
 		return new Promise(resolve =>
 		{
-			this.connexion[method](sql, params, (response) => { resolve(response); });
+			this.connexion[method](sql, params, (err, result) =>
+			{
+				if (err) {
+					throw err;
+				}
+
+				resolve(result);
+			});
 		});
 	}
 }
