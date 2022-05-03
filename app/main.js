@@ -1,45 +1,19 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
-const fs = require('fs');
 const db = require('./mainProcess/DatabaseLink');
+const { getFiles, getHomeDir } = require("./mainProcess/SystemFS");
 
 app.whenReady().then(() =>
 {
-	// Load API
+	// Loading API
+	ipcMain.handle('getFiles', (event, dirPath) => getFiles(dirPath));
+	ipcMain.handle('getHomeDir', (event) => getHomeDir());
+
 	ipcMain.handle('runSQL', async (event, method, sql, params) =>
 	{
 		await db.runSql(method, sql, params);
 	});
 
-	// TODO write file in ./main for filesystem features
-	ipcMain.handle('getFiles', (event, dirPath) =>
-	{
-		const files = fs.readdirSync(dirPath);
-
-		let results = [];
-		for (const file of files) {
-
-			let fullPath = dirPath + "/" + file;
-
-			try {
-				results.push({
-					"name": file,
-					"isDir": fs.statSync(fullPath).isDirectory()
-				});
-			}
-			catch (error) {
-				console.error("Error: failed to generate file object for '" + fullPath + "' cause: ");
-				console.error(error);
-			}
-		}
-
-		return results;
-	});
-
-	ipcMain.handle('getHomeDir', () =>
-	{
-		return app.getPath('home');
-	});
 
 	// Framework
 	createWindow();

@@ -1,6 +1,6 @@
 export class Database
 {
-	// TODO
+	// TODO implement
 	// Create tables & insert static data
 	static seedDatabase()
 	{
