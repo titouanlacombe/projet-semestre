@@ -1,8 +1,10 @@
-import { initFileExplorer } from "./Components/Sidebar/FileExplorer.js";
-import { testDatabase } from "./Models/Model.js";
+import { initFileExplorer } from "./rendererProcess/Components/Sidebar/FileExplorer.js";
+import { Database } from "./rendererProcess/Database/Database.js";
 
 window.addEventListener('DOMContentLoaded', () =>
 {
 	initFileExplorer();
-	testDatabase();
+
+	// TODO comment for prod
+	Database.seedDatabase();
 });
