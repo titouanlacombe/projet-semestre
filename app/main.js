@@ -8,9 +8,10 @@ const fs = require('fs');
 //     win.setTitle(title)
 // }
 
-app.whenReady().then(() => {
-    // Load API
-    ipcMain.handle('getFiles', (event, dirPath) => {
+app.whenReady().then(() => 
+{    // Load API
+    ipcMain.handle('getFiles', (event, dirPath) =>
+    {
         const files = fs.readdirSync(dirPath);
 
         let results = [];
@@ -33,7 +34,8 @@ app.whenReady().then(() => {
         return results;
     });
 
-    ipcMain.handle('getHomeDir', () => {
+    ipcMain.handle('getHomeDir', () =>
+    {
         return app.getPath('home');
     });
 
@@ -44,14 +46,16 @@ app.whenReady().then(() => {
     createWindow();
 
     // For macOS
-    app.on('activate', () => {
+    app.on('activate', () =>
+    {
         if (BrowserWindow.getAllWindows().length === 0) {
             createWindow();
         }
     });
 });
 
-function createWindow() {
+function createWindow()
+{
     const win = new BrowserWindow({
         autoHideMenuBar: true,
         icon: "./resources/icon.png",
@@ -65,7 +69,8 @@ function createWindow() {
     win.loadFile('app/index.html');
 }
 
-app.on('window-all-closed', () => {
+app.on('window-all-closed', () =>
+{
     // For macOS
     if (process.platform !== 'darwin') {
         app.quit();

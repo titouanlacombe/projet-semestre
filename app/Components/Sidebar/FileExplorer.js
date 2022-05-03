@@ -6,7 +6,8 @@ const fileIcon = "bi-file-earmark";
 const dirOpenedIcon = "bi-folder2-open";
 const dirClosedIcon = "bi-folder2";
 
-function initFile(file, fullPath) {
+function initFile(file, fullPath)
+{
     file.className = "file";
     file.dataset.opened = "false";
 
@@ -15,14 +16,16 @@ function initFile(file, fullPath) {
     file.onclick = () => toggleFolder(file.dataset.fullPath);
 }
 
-function createIcon(name) {
+function createIcon(name)
+{
     const icon = document.createElement("i");
     icon.className = name;
     icon.style = "padding-right: 8px;";
     return icon;
 }
 
-async function loadFiles(folder) {
+async function loadFiles(folder)
+{
     // Call API for files
     const files = await window.electronAPI.getFiles(folder.dataset.fullPath);
 
@@ -49,11 +52,13 @@ async function loadFiles(folder) {
     return list;
 }
 
-function getChilds(folder) {
+function getChilds(folder)
+{
     return document.getElementById(idKey + folder.dataset.fullPath + childsKey);
 }
 
-async function openFolder(folder) {
+async function openFolder(folder)
+{
     let childs = getChilds(folder);
 
     // If child list not exist create & cache it
@@ -68,14 +73,16 @@ async function openFolder(folder) {
     childs.hidden = false;
 }
 
-function closeFolder(folder) {
+function closeFolder(folder)
+{
     // Get childs list & hide it
     let childs = getChilds(folder);
 
     childs.hidden = true;
 }
 
-function toggleFolder(folderPath) {
+function toggleFolder(folderPath)
+{
     // Get folder element
     const folder = document.getElementById(idKey + folderPath);
 
@@ -88,7 +95,8 @@ function toggleFolder(folderPath) {
     folder.dataset.opened = !opened;
 }
 
-export async function initFileExplorer() {
+export async function initFileExplorer()
+{
     // Setup root element
     let root = document.getElementById(idKey);
     const homeDirPath = await window.electronAPI.getHomeDir();
