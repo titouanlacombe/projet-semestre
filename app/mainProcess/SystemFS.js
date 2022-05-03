@@ -24,9 +24,4 @@ module.exports = {
 
 		return results;
 	},
-
-	"getHomeDir": function getHomeDir()
-	{
-		return app.getPath('home');
-	},
 };

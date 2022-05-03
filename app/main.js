@@ -1,19 +1,22 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const db = require('./mainProcess/DatabaseLink');
-const { getFiles, getHomeDir } = require("./mainProcess/SystemFS");
+const { getFiles } = require("./mainProcess/SystemFS");
 
 app.whenReady().then(() =>
 {
 	// Loading API
 	ipcMain.handle('getFiles', (event, dirPath) => getFiles(dirPath));
-	ipcMain.handle('getHomeDir', (event) => getHomeDir());
+
+	ipcMain.handle('getHomeDir', (event) => 
+	{
+		return app.getPath('home');
+	});
 
 	ipcMain.handle('runSQL', async (event, method, sql, params) =>
 	{
 		await db.runSql(method, sql, params);
 	});
-
 
 	// Framework
 	createWindow();
