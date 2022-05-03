@@ -9,20 +9,29 @@ class Database
 		this.connexion = new sqlite3.Database(Database.filePath, (err) =>
 		{
 			if (err) {
-				console.log('Could not connect to database', err);
+				console.error('Could not connect to database', err);
 			} else {
 				console.log('Connected to database');
 			}
 		});
 	}
 
-	run(sql, params, callback)
+	runSql(method, sql, params)
 	{
+		// method precondition
+		if (["run", "get", "all"].indexOf(method) == -1) {
+			throw new Error(`Database unknown method: '${method}'`);
+		}
+
+		// connexion precondition
 		if (!this.connexion) {
 			throw new Error('Error: database not loaded');
 		}
 
-		return this.connexion.run(sql, params, callback);
+		return new Promise(resolve =>
+		{
+			this.connexion[method](sql, params, (response) => { resolve(response); });
+		});
 	}
 }
 

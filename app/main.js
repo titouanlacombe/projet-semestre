@@ -1,19 +1,17 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const fs = require('fs');
-const db = require('./main/Database');
+const db = require('./mainProcess/DatabaseLink');
 
 app.whenReady().then(() =>
 {
 	// Load API
 	ipcMain.handle('runSQL', async (event, method, sql, params) =>
 	{
-		await new Promise(resolve =>
-		{
-			db[method](sql, params, response => resolve(response));
-		});
+		await db.runSql(method, sql, params);
 	});
 
+	// TODO write file in ./main for filesystem features
 	ipcMain.handle('getFiles', (event, dirPath) =>
 	{
 		const files = fs.readdirSync(dirPath);
@@ -30,8 +28,8 @@ app.whenReady().then(() =>
 				});
 			}
 			catch (error) {
-				console.log("Error: failed to generate file object for '" + fullPath + "' cause: ");
-				console.log(error);
+				console.error("Error: failed to generate file object for '" + fullPath + "' cause: ");
+				console.error(error);
 			}
 		}
 

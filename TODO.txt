@@ -6,5 +6,7 @@ open / close folder
 ignore hidden files
 https://stackabuse.com/a-sqlite-tutorial-with-node-js/
 
+database save path (config / in main ?)
+
 create npm scripts for build with windows (flemme)
 configure root folder with OS file explorer
