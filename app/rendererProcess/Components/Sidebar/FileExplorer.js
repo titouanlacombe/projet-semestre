@@ -1,4 +1,4 @@
-const idKey = "fileExplorer://";
+const rootKey = "fileExplorer://";
 const childsKey = ":childs";
 
 // Icons
@@ -6,14 +6,15 @@ const fileIcon = "bi-file-earmark";
 const dirOpenedIcon = "bi-folder2-open";
 const dirClosedIcon = "bi-folder2";
 
-function initFile(file, fullPath)
+function initFile(domElement, isDir, path)
 {
-	file.className = "file";
-	file.dataset.opened = "false";
+	domElement.className = "file";
+	domElement.dataset.opened = "false";
+	domElement.dataset.isDir = isDir;
 
-	file.dataset.fullPath = fullPath;
-	file.id = idKey + file.dataset.fullPath;
-	file.onclick = () => toggleFolder(file.dataset.fullPath);
+	domElement.dataset.path = path;
+	domElement.id = rootKey + domElement.dataset.path;
+	domElement.onclick = () => toggleFolder(domElement.dataset.path);
 }
 
 function createIcon(name)
@@ -27,32 +28,32 @@ function createIcon(name)
 async function loadFiles(folder)
 {
 	// Call API for files
-	const files = await window.electronAPI.getFiles(folder.dataset.fullPath);
+	const files = await window.electronAPI.getFiles(folder.dataset.path);
 
 	// Create wrapper list
-	const list = document.createElement("ul");
-	list.id = idKey + folder.dataset.fullPath + childsKey;
+	const childs = document.createElement("ul");
+	childs.id = rootKey + folder.dataset.path + childsKey;
 
-	// Create childs & fill list
+	// Create childs & fill childs
 	for (const file of files) {
+		const child = document.createElement("li");
+		initFile(child, file.isDir, folder.dataset.path + "/" + file.name);
 
 		// File / Folder icon
 		const icon = createIcon(file.isDir ? dirClosedIcon : fileIcon);
-
-		const child = document.createElement("li");
-		initFile(child, folder.dataset.fullPath + "/" + file.name);
 		child.appendChild(icon);
+
 		child.innerHTML += file.name;
 
-		list.appendChild(child);
+		childs.appendChild(child);
 	}
 
-	return list;
+	return childs;
 }
 
 function getChilds(folder)
 {
-	return document.getElementById(idKey + folder.dataset.fullPath + childsKey);
+	return document.getElementById(rootKey + folder.dataset.path + childsKey);
 }
 
 async function openFolder(folder)
@@ -79,10 +80,15 @@ function closeFolder(folder)
 	childs.hidden = true;
 }
 
-function toggleFolder(folderPath)
+function toggleFolder(path)
 {
 	// Get folder element
-	const folder = document.getElementById(idKey + folderPath);
+	const folder = document.getElementById(rootKey + path);
+
+	// If trying to open file
+	if (!JSON.parse(folder.dataset.isDir)) {
+		return;
+	}
 
 	let opened = JSON.parse(folder.dataset.opened);
 
@@ -91,15 +97,18 @@ function toggleFolder(folderPath)
 
 	// Toggle opened
 	folder.dataset.opened = !opened;
+
+	// TODO update icon
 }
 
 export async function initFileExplorer()
 {
-	// Setup root element
-	let root = document.getElementById(idKey);
-	const homeDirPath = await window.electronAPI.getHomeDir();
-	initFile(root, homeDirPath);
-
 	// Init root
-	toggleFolder(root.dataset.fullPath);
+	let root = document.getElementById(rootKey);
+	const homeDirPath = await window.electronAPI.getHomeDir();
+	initFile(root, true, homeDirPath);
+
+	// Open root
+	console.log(root.dataset.path);
+	toggleFolder(root.dataset.path);
 }
