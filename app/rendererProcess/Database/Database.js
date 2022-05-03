@@ -2,11 +2,11 @@ export class Database
 {
 	// TODO implement
 	// Create tables & insert static data
-	static seedDatabase()
+	static async seedDatabase()
 	{
 		console.log("Seeding database...");
 
-		let result = window.electronAPI.runSQL("run", `
+		let result = await window.electronAPI.runSQL("run", `
 			CREATE TABLE albums (
 				id INTEGER PRIMARY KEY,
 				name TEXT NOT NULL,
