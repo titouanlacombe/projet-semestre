@@ -11,6 +11,7 @@ export class Database
 				id INTEGER PRIMARY KEY,
 				name TEXT NOT NULL,
 			);
+			INSERT INTO albums VALUES ("Mezzanine");
 		`, []);
 
 		console.log("Seeding complete, results:");

@@ -28,6 +28,10 @@ class Database
 			throw new Error('Error: database not loaded');
 		}
 
+		console.log("Executing " + method);
+		console.log("SQL: " + sql);
+		console.log("Values", params);
+
 		return new Promise(resolve =>
 		{
 			this.connexion[method](sql, params, (response) => { resolve(response); });
