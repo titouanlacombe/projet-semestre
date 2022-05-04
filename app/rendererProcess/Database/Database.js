@@ -1,10 +1,10 @@
 export class Database
 {
-	static version = "0.1";
+	static version = 2;
 
 	static async getVersion()
 	{
-		await this.sql("PRAGMA user_version", [], "get");
+		return (await this.sql("PRAGMA user_version", [], "get")).user_version;
 	}
 
 	static async dropDatabase()
