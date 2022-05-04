@@ -20,7 +20,6 @@ export class Database
 		let requests = [
 			`PRAGMA user_version = ${this.version}`,
 			`CREATE TABLE albums (
-				id INTEGER PRIMARY KEY,
 				name TEXT NOT NULL
 			);`,
 			`INSERT INTO albums VALUES ('Mezzanine')`,
@@ -35,7 +34,7 @@ export class Database
 
 	static async sql(sql, params = [], method = "run")
 	{
-		await window.electronAPI.sql(sql, params, method);
+		return window.electronAPI.sql(sql, params, method);
 	}
 
 	static async initDB()
@@ -49,5 +48,7 @@ export class Database
 		console.log("Warning: DB version missmatch: ", dbver, this.version);
 		await this.dropDatabase();
 		await this.seedDatabase();
+
+		console.log(await this.sql("select * from albums", [], "all"));
 	}
 }

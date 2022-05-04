@@ -12,7 +12,7 @@ app.whenReady().then(() =>
 
 	ipcMain.handle('sql', async (event, sql, params, method) =>
 	{
-		await db.sql(sql, params, method);
+		return db.sql(sql, params, method);
 	});
 
 	// --- Framework ---

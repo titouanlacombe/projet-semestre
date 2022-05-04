@@ -57,7 +57,7 @@ class Database
 	{
 		// method precondition
 		if (["run", "get", "all"].indexOf(method) == -1) {
-			throw new Error(`Database unknown method: '${method}'`);
+			throw new Error(`SQL unknown method: '${method}'`);
 		}
 
 		// connexion precondition
@@ -66,13 +66,15 @@ class Database
 		}
 
 		// console.log("Executing " + method);
-		// console.log("SQL: " + sql);
+		console.log("SQL: " + sql);
 		// console.log("Values", params);
 
 		return new Promise((resolve, reject) =>
 		{
 			this.connexion[method](sql, params, (err, result) =>
 			{
+				console.log(err, result);
+
 				if (err) {
 					reject(err);
 				}
