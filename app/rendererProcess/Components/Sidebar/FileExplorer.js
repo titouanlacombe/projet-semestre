@@ -109,6 +109,5 @@ export async function initFileExplorer()
 	initFile(root, true, homeDirPath);
 
 	// Open root
-	console.log(root.dataset.path);
 	toggleFolder(root.dataset.path);
 }
