@@ -5,6 +5,5 @@ window.addEventListener('DOMContentLoaded', () =>
 {
 	initFileExplorer();
 
-	// TODO comment for prod
-	Database.seedDatabase();
+	Database.initDB();
 });

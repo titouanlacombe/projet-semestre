@@ -1,24 +1,53 @@
 export class Database
 {
+	static version = "0.1";
+
+	static async getVersion()
+	{
+		await this.sql("PRAGMA user_version", [], "get");
+	}
+
+	static async dropDatabase()
+	{
+		await window.electronAPI.dropDB();
+		console.log("Droped Database");
+	}
+
 	// TODO implement
-	// TODO https://www.sqlitetutorial.net/
 	// Create tables & insert static data
 	static async seedDatabase()
 	{
-		console.log("Seeding database...");
-
-		await window.electronAPI.runSQL("run", `
-			CREATE TABLE albums (
+		let requests = [
+			`PRAGMA user_version = ${this.version}`,
+			`CREATE TABLE albums (
 				id INTEGER PRIMARY KEY,
 				name TEXT NOT NULL
-			);
-		`, []);
+			);`,
+			`INSERT INTO albums VALUES ('Mezzanine')`,
+		];
 
-		await window.electronAPI.runSQL("run", `
-			INSERT INTO albums VALUES ('Mezzanine');
-		`, []);
+		for (let request of requests) {
+			await this.sql(request);
+		}
 
-		console.log("Seeding complete, results:");
-		console.log(result);
+		console.log("Seeded Database");
+	}
+
+	static async sql(sql, params = [], method = "run")
+	{
+		await window.electronAPI.sql(sql, params, method);
+	}
+
+	static async initDB()
+	{
+		// Do nothing if DB is at the right version
+		let dbver = await this.getVersion();
+		if (dbver == this.version) {
+			return;
+		}
+
+		console.log("Warning: DB version missmatch: ", dbver, this.version);
+		await this.dropDatabase();
+		await this.seedDatabase();
 	}
 }

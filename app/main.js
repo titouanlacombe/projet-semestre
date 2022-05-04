@@ -5,20 +5,17 @@ const { getFiles } = require("./mainProcess/SystemFS");
 
 app.whenReady().then(() =>
 {
-	// Loading API
+	// --- API ---
 	ipcMain.handle('getFiles', (event, dirPath) => getFiles(dirPath));
+	ipcMain.handle('getHomeDir', (event) => { return app.getPath('home'); });
+	ipcMain.handle('dropDB', async (event) => { await db.drop(); });
 
-	ipcMain.handle('getHomeDir', (event) => 
+	ipcMain.handle('sql', async (event, sql, params, method) =>
 	{
-		return app.getPath('home');
+		await db.sql(sql, params, method);
 	});
 
-	ipcMain.handle('runSQL', async (event, method, sql, params) =>
-	{
-		await db.runSql(method, sql, params);
-	});
-
-	// Framework
+	// --- Framework ---
 	createWindow();
 
 	// For macOS
