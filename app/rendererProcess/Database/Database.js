@@ -1,9 +1,11 @@
 export class Database
 {
-	static version = 2;
+	static version = 3;
 
 	static async getVersion()
 	{
+		// Uncomment when experimenting with DB
+		// return null;
 		return (await this.sql("PRAGMA user_version", [], "get")).user_version;
 	}
 
@@ -13,16 +15,59 @@ export class Database
 		console.log("Droped Database");
 	}
 
-	// TODO implement
 	// Create tables & insert static data
 	static async seedDatabase()
 	{
 		let requests = [
+			// --- Database version ---
 			`PRAGMA user_version = ${this.version}`,
+
+			// --- albums ---
 			`CREATE TABLE albums (
+				name TEXT NOT NULL,
+				released_at TEXT DEFAULT NULL
+			);`,
+			`INSERT INTO albums(name) VALUES ('Mezzanine')`,
+
+			// --- bands ---
+			`CREATE TABLE bands (
 				name TEXT NOT NULL
 			);`,
-			`INSERT INTO albums VALUES ('Mezzanine')`,
+
+			// --- artists ---
+			`CREATE TABLE artists (
+				firstname TEXT,
+				lastname TEXT,
+				stagename TEXT,
+				band_id INTEGER
+			);`,
+
+			// --- worked_on ---
+			`CREATE TABLE worked_on (
+				artist_id INTEGER NOT NULL,
+				title_id INTEGER NOT NULL,
+				jobtype TEXT NOT NULL
+			);`,
+
+			// --- titles ---
+			`CREATE TABLE titles (
+				name TEXT NOT NULL,
+				genre TEXT,
+				file_id INTEGER NOT NULL,
+				album_id INTEGER,
+				released_at TEXT
+			);`,
+
+			// --- files ---
+			`CREATE TABLE files (
+				path TEXT NOT NULL,
+				imported_at TEXT NOT NULL
+			);`,
+
+			// --- genres ---
+			`CREATE TABLE genres (
+				name TEXT NOT NULL
+			);`,
 		];
 
 		for (let request of requests) {
