@@ -1,6 +1,9 @@
-import { initFileExplorer } from "./Components/Sidebar/FileExplorer.js";
+import { initFileExplorer } from "./rendererProcess/Components/Sidebar/FileExplorer.js";
+import { Database } from "./rendererProcess/Database/Database.js";
 
 window.addEventListener('DOMContentLoaded', () =>
 {
-    initFileExplorer();
+	initFileExplorer();
+
+	Database.initDB();
 });
