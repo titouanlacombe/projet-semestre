@@ -7,6 +7,9 @@ const fileIcon = "bi-file-earmark";
 const dirOpenedIcon = "bi-folder2-open";
 const dirClosedIcon = "bi-folder2";
 
+// Other
+const filenameOverflow = " ...";
+
 function createIcon(name)
 {
 	const icon = document.createElement("i");
@@ -35,7 +38,13 @@ function createFileEntry(isDir, dirpath, name)
 	file.appendChild(createIcon(isDir ? dirClosedIcon : fileIcon));
 
 	// Text
-	file.innerHTML += name;
+	if (name.length > 13 + filenameOverflow.length) {
+		// If name too long slice it
+		file.innerHTML += name.slice(0, 13) + filenameOverflow;
+	}
+	else {
+		file.innerHTML += name;
+	}
 
 	return file;
 }

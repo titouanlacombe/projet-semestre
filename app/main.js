@@ -30,6 +30,7 @@ app.whenReady().then(() =>
 function createWindow()
 {
 	const win = new BrowserWindow({
+		autoHideMenuBar: true,
 		icon: "./resources/icon.png",
 		webPreferences: {
 			preload: path.resolve('app/preload.js'),

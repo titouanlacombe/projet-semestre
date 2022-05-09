@@ -2,21 +2,38 @@
 <html lang="en">
 
 <head>
-	<meta charset="UTF-8">
-	<meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
 
-	<title>Wavia Player</title>
-	<link rel="stylesheet" href="style.css">
-	<script type="module" src="renderer.js"></script>
+    <title>Wavia Player</title>
+    <link rel="stylesheet" href="style.css">
+    <script type="module" src="renderer.js"></script>
 </head>
 
 <body>
-	<div id="sidebar">
-	</div>
+    <div id="sidebar">
+    </div>
 
-	<div id="player">
-		<p>Hello World!</p>
-	</div>
+    <div id="player">
+
+        <nav class="topnav" id="myTopnav">
+            <a href="#home" class="active">Home</a>
+            <a href="./playlists.html">Playlists</a>
+            <a href="./albums.html">Albums</a>
+            <a href="./artists.html">Artists</a>
+            <form class="search-container">
+                <input type="search" placeholder="Search" aria-label="Search">
+                <button type="submit">Search</button>
+            </form>
+        </nav>
+
+        <h1>Wavia</h1>
+        <div class="center">
+            <img src="../resources/icon.png">
+        </div>
+
+    </div>
+
 </body>
 
 </html>
