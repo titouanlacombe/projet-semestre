@@ -1,21 +1,11 @@
-const rootKey = "fileExplorer://";
-const childsKey = ":childs";
+// Anchors
+const fileAnchor = "fileExplorerFile:/";
+const childsAnchor = "fileExplorerChilds:/";
 
 // Icons
 const fileIcon = "bi-file-earmark";
 const dirOpenedIcon = "bi-folder2-open";
 const dirClosedIcon = "bi-folder2";
-
-function initFile(domElement, isDir, path)
-{
-	domElement.className = "file";
-	domElement.dataset.opened = "false";
-	domElement.dataset.isDir = isDir;
-
-	domElement.dataset.path = path;
-	domElement.id = rootKey + domElement.dataset.path;
-	domElement.onclick = () => toggleFolder(domElement.dataset.path);
-}
 
 function createIcon(name)
 {
@@ -25,89 +15,128 @@ function createIcon(name)
 	return icon;
 }
 
-async function loadFiles(folder)
+function createFileEntry(isDir, dirpath, name)
+{
+	const file = document.createElement("li");
+
+	// Dataset
+	file.dataset.opened = "false";
+	file.dataset.isDir = isDir;
+	file.dataset.path = dirpath + "/" + name;
+
+	// Basic data
+	file.id = fileAnchor + file.dataset.path;
+	file.className = "file";
+
+	// Event
+	file.onclick = () => toggleDirectory(file.dataset.path);
+
+	// Icon
+	file.appendChild(createIcon(isDir ? dirClosedIcon : fileIcon));
+
+	// Text
+	file.innerHTML += name;
+
+	return file;
+}
+
+async function loadFiles(directory)
 {
 	// Call API for files
-	const files = await window.electronAPI.getFiles(folder.dataset.path);
+	const files = await window.electronAPI.getFiles(directory.dataset.path);
 
 	// Create wrapper list
 	const childs = document.createElement("ul");
-	childs.id = rootKey + folder.dataset.path + childsKey;
+	childs.id = childsAnchor + directory.dataset.path;
 
-	// Create childs & fill childs
+	// Fill childs
 	for (const file of files) {
-		const child = document.createElement("li");
-		initFile(child, file.isDir, folder.dataset.path + "/" + file.name);
-
-		// File / Folder icon
-		const icon = createIcon(file.isDir ? dirClosedIcon : fileIcon);
-		child.appendChild(icon);
-
-		child.innerHTML += file.name;
-
-		childs.appendChild(child);
+		childs.appendChild(
+			createFileEntry(file.isDir, directory.dataset.path, file.name)
+		);
 	}
 
 	return childs;
 }
 
-function getChilds(folder)
+function getChilds(directory)
 {
-	return document.getElementById(rootKey + folder.dataset.path + childsKey);
+	return document.getElementById(childsAnchor + directory.dataset.path);
 }
 
-async function openFolder(folder)
+async function openDirectory(directory)
 {
-	let childs = getChilds(folder);
+	let childs = getChilds(directory);
 
 	// If child list not exist create & cache it
 	if (childs === null) {
 		// Create child list
-		childs = await loadFiles(folder);
+		childs = await loadFiles(directory);
 
-		// Append it after folder
-		folder.after(childs);
+		// Append it after directory
+		directory.after(childs);
 	}
 
 	childs.hidden = false;
 }
 
-function closeFolder(folder)
+function closeDirectory(directory)
 {
 	// Get childs list & hide it
-	let childs = getChilds(folder);
+	let childs = getChilds(directory);
 
 	childs.hidden = true;
 }
 
-function toggleFolder(path)
+function toggleDirectory(path)
 {
-	// Get folder element
-	const folder = document.getElementById(rootKey + path);
+	// Get directory element
+	const directory = document.getElementById(fileAnchor + path);
 
 	// If trying to open file
-	if (!JSON.parse(folder.dataset.isDir)) {
+	if (!JSON.parse(directory.dataset.isDir)) {
 		return;
 	}
 
-	let opened = JSON.parse(folder.dataset.opened);
+	let opened = JSON.parse(directory.dataset.opened);
 
 	// Open if closed & vice versa
-	opened ? closeFolder(folder) : openFolder(folder);
+	opened ? closeDirectory(directory) : openDirectory(directory);
 
-	// Toggle opened
-	folder.dataset.opened = !opened;
+	// Toggle opened flag
+	opened = !opened;
+	directory.dataset.opened = opened;
 
-	// TODO update icon
+	// Toggle icon
+	let icons = directory.getElementsByTagName("i");
+	if (icons.length != 1) {
+		console.log(icons);
+		throw new Error("Can't find directory icon of " + path);
+	}
+
+	icons[0].className = opened ? dirOpenedIcon : dirClosedIcon;
+}
+
+function dirname(path)
+{
+	let separatorIndex = Math.max(path.lastIndexOf("\\"), path.lastIndexOf("/"));
+	return path.substring(0, separatorIndex + 1);
+}
+
+function filename(path)
+{
+	return path.replace(/^.*[\\\/]/, '');
 }
 
 export async function initFileExplorer()
 {
 	// Init root
-	let root = document.getElementById(rootKey);
 	const homeDirPath = await window.electronAPI.getHomeDir();
-	initFile(root, true, homeDirPath);
+	const root = createFileEntry(true, dirname(homeDirPath), filename(homeDirPath));
+
+	// Add root to sidebar
+	document.getElementById("sidebar").appendChild(root);
 
 	// Open root
-	toggleFolder(root.dataset.path);
+	toggleDirectory(root.dataset.path);
 }
