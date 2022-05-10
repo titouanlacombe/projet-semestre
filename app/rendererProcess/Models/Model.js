@@ -2,14 +2,28 @@ import { Database } from "../Database/Database";
 
 export class Model
 {
-	constructor(table, rows)
+	constructor(table)
 	{
 		this.table = table;
-		this.rows = rows;
 	}
 
-	async get(id)
+	async find(id)
 	{
-		await Database.sql(`SELECT * FROM ${this.table} WHERE _rowid_ = ${id}`);
+		await this.get(`WHERE _rowid_ = ${id}`, []);
+	}
+
+	async get(request, params)
+	{
+		await this.sql(request, params, 'get');
+	}
+
+	async all(request, params)
+	{
+		await this.sql(request, params, 'all');
+	}
+
+	async sql(request, params, method)
+	{
+		await Database.sql(`SELECT * FROM ${this.table} ${request}`, params, method);
 	}
 }

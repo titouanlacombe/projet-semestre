@@ -4,9 +4,11 @@ export class Album extends Model
 {
 	constructor()
 	{
-		super("albums", [
-			"name",
-			"released_at",
-		]);
+		super("albums");
+	}
+
+	search(name)
+	{
+		await this.all(`WHERE name LIKE '%${name}%'`);
 	}
 }
