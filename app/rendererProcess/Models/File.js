@@ -1,11 +1,8 @@
-import { Model } from "./Model";
+import { Model } from "./Model.js";
 
 export class File extends Model
 {
-	constructor()
-	{
-		super("files");
-	}
+	static table = "files";
 
 	play()
 	{

@@ -1,29 +1,46 @@
-import { Database } from "../Database/Database";
+import { Database } from "../Database/Database.js";
 
 export class Model
 {
-	constructor(table)
+	static table = undefined;
+
+	static async find(id)
 	{
-		this.table = table;
+		return this.get(`WHERE _rowid_ = ${id}`, []);
 	}
 
-	async find(id)
+	static generateModel(object)
 	{
-		await this.get(`WHERE _rowid_ = ${id}`, []);
+		if (!object) {
+			return null;
+		}
+
+		let model = new this();
+		for (const key in object) {
+			model[key] = object[key];
+		}
+		return model;
 	}
 
-	async get(request, params)
+	static async get(request, params)
 	{
-		await this.sql(request, params, 'get');
+		return this.generateModel(await this.sql(request, params, 'get'));
 	}
 
-	async all(request, params)
+	static async all(request, params)
 	{
-		await this.sql(request, params, 'all');
+		let objects = await this.sql(request, params, 'all');
+
+		let results = [];
+		for (const iterator of objects) {
+			results.push(this.generateModel(iterator));
+		}
+
+		return results;
 	}
 
-	async sql(request, params, method)
+	static async sql(request, params, method)
 	{
-		await Database.sql(`SELECT * FROM ${this.table} ${request}`, params, method);
+		return Database.sql(`SELECT * FROM ${this.table} ${request}`, params, method);
 	}
 }

@@ -1,13 +1,10 @@
-import { Model } from "./Model";
+import { Model } from "./Model.js";
 
 export class Band extends Model
 {
-	constructor()
-	{
-		super("bands");
-	}
+	static table = "bands";
 
-	search(name)
+	static async search(name)
 	{
 		await this.all(`WHERE name LIKE '%${name}%'`);
 	}

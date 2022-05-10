@@ -93,7 +93,5 @@ export class Database
 		console.log("Warning: DB version missmatch: ", dbver, this.version);
 		await this.dropDatabase();
 		await this.seedDatabase();
-
-		console.log(await this.sql("select * from albums", [], "all"));
 	}
 }
