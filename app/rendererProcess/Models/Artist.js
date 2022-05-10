@@ -1,14 +1,15 @@
 import { Model } from "./Model";
 
-export class Album extends Model
+export class Artist extends Model
 {
 	constructor()
 	{
-		super("albums");
+		super("artists");
 	}
 
 	search(name)
 	{
+		// TODO
 		await this.all(`WHERE name LIKE '%${name}%'`);
 	}
 
@@ -16,5 +17,11 @@ export class Album extends Model
 	{
 		// TODO
 		return [];
+	}
+
+	band()
+	{
+		// TODO
+		return null;
 	}
 }

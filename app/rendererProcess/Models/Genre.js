@@ -1,10 +1,10 @@
 import { Model } from "./Model";
 
-export class Album extends Model
+export class Genre extends Model
 {
 	constructor()
 	{
-		super("albums");
+		super("genres");
 	}
 
 	search(name)

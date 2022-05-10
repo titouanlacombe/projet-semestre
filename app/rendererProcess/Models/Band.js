@@ -1,10 +1,10 @@
 import { Model } from "./Model";
 
-export class Album extends Model
+export class Band extends Model
 {
 	constructor()
 	{
-		super("albums");
+		super("bands");
 	}
 
 	search(name)
@@ -12,9 +12,9 @@ export class Album extends Model
 		await this.all(`WHERE name LIKE '%${name}%'`);
 	}
 
-	titles()
+	artists()
 	{
 		// TODO
-		return [];
+		return null;
 	}
 }
