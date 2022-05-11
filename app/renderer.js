@@ -13,5 +13,4 @@ function initApp()
 async function testDB()
 {
 	await Database.initDB();
-	console.log(await Album.find(1));
 }

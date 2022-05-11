@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
 const db = require('./mainProcess/DatabaseLink');
 const { getFiles } = require("./mainProcess/SystemFS");
@@ -6,10 +6,18 @@ const { getFiles } = require("./mainProcess/SystemFS");
 app.whenReady().then(() =>
 {
 	// --- API ---
-	ipcMain.handle('getFiles', (event, dirPath) => getFiles(dirPath));
+	// FS
+	ipcMain.handle('getFiles', async (event, dirPath) => { return getFiles(dirPath) });
 	ipcMain.handle('getHomeDir', (event) => { return app.getPath('home'); });
-	ipcMain.handle('dropDB', async (event) => { return db.drop(); });
 
+	// System
+	ipcMain.handle('systemDialog', async (event, params) =>
+	{
+		return dialog.showOpenDialog({ properties: params });
+	});
+
+	// DB
+	ipcMain.handle('dropDB', async (event) => { return db.drop(); });
 	ipcMain.handle('sql', async (event, sql, params, method) =>
 	{
 		return db.sql(sql, params, method);

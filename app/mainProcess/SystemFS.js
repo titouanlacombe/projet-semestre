@@ -1,8 +1,9 @@
 const fs = require('fs');
 
 module.exports = {
-	"getFiles": function getFiles(dirPath)
+	"getFiles": async function getFiles(dirPath)
 	{
+		// TODO remove both use of sync to gain more performance
 		const files = fs.readdirSync(dirPath);
 
 		let results = [];
