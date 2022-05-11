@@ -1,4 +1,4 @@
-import { dirname, filename, is_hidden } from "../../Utils/Path";
+import { dirname, filename, is_hidden } from "../../Utils/Path.js";
 
 // Anchors
 const fileAnchor = "fileExplorerFile:/";

@@ -1,6 +1,6 @@
 import { FileIterator } from "./FileIterator.js";
 import { File } from "../Models/File.js";
-import { extension } from "../../Utils/Path";
+import { extension } from "../Utils/Path.js";
 
 export class ImportManager
 {
