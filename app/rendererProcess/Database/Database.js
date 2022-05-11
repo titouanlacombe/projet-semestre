@@ -79,6 +79,10 @@ export class Database
 
 	static async sql(sql, params = [], method = "run")
 	{
+		// Remove spaces
+		// TODO fix
+		sql = sql.replace(/(\s|\n)+/, " ");
+
 		return window.electronAPI.sql(sql, params, method);
 	}
 

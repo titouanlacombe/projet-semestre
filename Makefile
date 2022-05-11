@@ -1,5 +1,5 @@
 .PHONY: npm-rm-proxy install-dependencies setup build clean
-.DEFAULT_GOAL := build
+.DEFAULT_GOAL := launch
 
 PKGMNG_UPDATE=apt update && apt upgrade -y
 PKGMNG_INSTALL=apt install -y
@@ -19,6 +19,9 @@ setup:
 build:
 	npx electron-forge import
 	npm run make
+
+launch:
+	npm start
 
 clean:
 	rm -dR node_modules
