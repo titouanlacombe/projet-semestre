@@ -4,9 +4,9 @@ urgent {
 }
 
 titou {
-	ignore hidden files
-	start at music folder
+	add spécial icon for recognised files (mp3, flac)
 	Add contraints to DB
+	start at music folder?
 }
 
 nathan {

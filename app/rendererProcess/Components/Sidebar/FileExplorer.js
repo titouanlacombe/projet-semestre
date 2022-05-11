@@ -60,6 +60,11 @@ async function loadFiles(directory)
 
 	// Fill childs
 	for (const file of files) {
+		// Ignore hidden files
+		if (is_hidden(file.name)) {
+			continue;
+		}
+
 		childs.appendChild(
 			createFileEntry(file.isDir, directory.dataset.path, file.name)
 		);
@@ -135,6 +140,12 @@ function dirname(path)
 function filename(path)
 {
 	return path.replace(/^.*[\\\/]/, '');
+}
+
+// Return wether filename starts with a '.'
+function is_hidden(file_name)
+{
+	return file_name[0] == '.';
 }
 
 export async function initFileExplorer()
