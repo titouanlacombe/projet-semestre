@@ -95,3 +95,8 @@ export class Database
 		await this.seedDatabase();
 	}
 }
+
+window.addEventListener('DOMContentLoaded', () =>
+{
+	Database.initDB();
+});

@@ -148,7 +148,7 @@ function is_hidden(file_name)
 	return file_name[0] == '.';
 }
 
-export async function initFileExplorer()
+window.addEventListener('DOMContentLoaded', async () =>
 {
 	// Init root
 	const homeDirPath = await window.electronAPI.getHomeDir();
@@ -159,4 +159,4 @@ export async function initFileExplorer()
 
 	// Open root
 	toggleDirectory(root.dataset.path);
-}
+});
