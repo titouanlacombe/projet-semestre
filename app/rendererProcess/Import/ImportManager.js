@@ -20,7 +20,7 @@ export class ImportManager
 		// Ignore non recognised files
 		let ext = extension(file.path);
 		if (!extension_whitelist.includes(ext)) {
-			console.log(`Ignoring ${file.path} because of extension whitelist (${ext})`);
+			console.log(`Ignoring ${file.path} because of unknown extension (${ext})`);
 			return;
 		}
 

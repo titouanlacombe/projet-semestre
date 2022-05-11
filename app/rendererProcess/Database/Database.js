@@ -5,7 +5,7 @@ export class Database
 	static async getVersion()
 	{
 		// Uncomment when experimenting with DB
-		// return null;
+		return null;
 		return (await this.sql("PRAGMA user_version", [], "get")).user_version;
 	}
 
@@ -79,10 +79,6 @@ export class Database
 
 	static async sql(sql, params = [], method = "run")
 	{
-		// Remove spaces
-		// TODO fix
-		sql = sql.replace(/(\s|\n)+/, " ");
-
 		return window.electronAPI.sql(sql, params, method);
 	}
 

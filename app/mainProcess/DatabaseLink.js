@@ -77,7 +77,11 @@ class Database
 			});
 		});
 
-		console.log(`SQL ${method}: ${sql}\nPARAMS: ${params}\nRESULT: ${promise_result}`);
+		// Remove spaces for logging
+		let request = await sql.replace(/(\s|\n)+/g, " ");
+		let params_json = JSON.stringify(params);
+		let result_json = JSON.stringify(promise_result);
+		console.log(`SQL ${method}: ${request}\nPARAMS: ${params_json}\nRESULT: ${result_json}`);
 
 		return promise_result;
 	}
