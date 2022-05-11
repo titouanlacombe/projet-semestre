@@ -10,6 +10,7 @@ export class ImportManager
 
 		do {
 			// Ignore directories
+			// TODO ignore non recognised files
 			if (file_it.get().isDir) {
 				continue;
 			}
@@ -31,7 +32,7 @@ export class ImportManager
 
 		File.create({
 			path: clean_path,
-			imported_at: Date.now().toString()
+			imported_at: Date.now().toUTCString()
 		});
 	}
 }
