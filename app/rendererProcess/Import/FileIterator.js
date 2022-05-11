@@ -22,8 +22,13 @@ export class FileIterator
 			// Add path because user doesn't have this info
 			file.path = path + "/" + file.name;
 
-			if (this.recursive && file.isDir) {
-				this.open_dir(file.path);
+			if (file.isDir) {
+				if (this.recursive) {
+					this.open_dir(file.path);
+				}
+
+				// Ignore directories
+				continue;
 			}
 
 			// Callback with file
