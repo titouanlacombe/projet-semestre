@@ -13,3 +13,5 @@ configure root folder with OS file explorer
 
 meilleur modèle pour les groupe de musiques (many to many + time start-end) meme si on a pas asser d'infos pour remplir
 Sidebar as electron menu
+
+Add contraints to DB

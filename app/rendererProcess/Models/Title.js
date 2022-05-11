@@ -1,3 +1,6 @@
+import { Genre } from "./Genre.js";
+import { Album } from "./Album.js";
+import { File } from "./File.js";
 import { Model } from "./Model.js";
 
 export class Title extends Model
@@ -6,37 +9,31 @@ export class Title extends Model
 
 	static async search(name)
 	{
-		await this.all(`WHERE name LIKE '%${name}%'`);
+		return this.all(`WHERE name LIKE '%${name}%'`);
 	}
 
-	artists()
+	async artists()
 	{
-		// TODO
-		return [];
+		return Database.sql(`
+			SELECT * FROM artists
+			LEFT JOIN worked_on ON artist_id = artists._rowid_
+			WHERE title_id = ${this._rowid_};`,
+			[], "all"
+		);
 	}
 
-	genre()
+	async genre()
 	{
-		// TODO
-		return null;
+		return Genre.find(this.genre_id);
 	}
 
-	album()
+	async album()
 	{
-		// TODO
-		return null;
+		return Album.find(this.album_id);
 	}
 
-	file()
+	async file()
 	{
-		// TODO
-		return null;
-	}
-
-	// Search with title name & artists name(s) & band names
-	// TODO move elsewere
-	multisearch()
-	{
-		return [];
+		return File.find(this.file_id);
 	}
 }

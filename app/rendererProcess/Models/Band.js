@@ -1,3 +1,4 @@
+import { Artist } from "./Artist.js";
 import { Model } from "./Model.js";
 
 export class Band extends Model
@@ -6,12 +7,11 @@ export class Band extends Model
 
 	static async search(name)
 	{
-		await this.all(`WHERE name LIKE '%${name}%'`);
+		return this.all(`WHERE name LIKE '%${name}%'`);
 	}
 
-	artists()
+	async artists()
 	{
-		// TODO
-		return null;
+		return Artist.all(`WHERE band_id = ${this._rowid_}`);
 	}
 }

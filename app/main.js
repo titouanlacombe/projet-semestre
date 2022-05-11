@@ -8,7 +8,7 @@ app.whenReady().then(() =>
 	// --- API ---
 	ipcMain.handle('getFiles', (event, dirPath) => getFiles(dirPath));
 	ipcMain.handle('getHomeDir', (event) => { return app.getPath('home'); });
-	ipcMain.handle('dropDB', async (event) => { await db.drop(); });
+	ipcMain.handle('dropDB', async (event) => { return db.drop(); });
 
 	ipcMain.handle('sql', async (event, sql, params, method) =>
 	{

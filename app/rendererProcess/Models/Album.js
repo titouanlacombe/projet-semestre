@@ -1,3 +1,4 @@
+import { Database } from "../Database/Database.js";
 import { Model } from "./Model.js";
 
 export class Album extends Model
@@ -6,12 +7,14 @@ export class Album extends Model
 
 	static async search(name)
 	{
-		await this.all(`WHERE name LIKE '%${name}%'`);
+		return this.all(`WHERE name LIKE '%${name}%'`);
 	}
 
-	titles()
+	async titles()
 	{
-		// TODO
-		return [];
+		return Database.sql(`
+			SELECT * FROM titles WHERE album_id = ${this._rowid_};`,
+			[], "all"
+		);
 	}
 }

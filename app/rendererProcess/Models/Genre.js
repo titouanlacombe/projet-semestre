@@ -1,4 +1,5 @@
 import { Model } from "./Model.js";
+import { Title } from "./Title.js";
 
 export class Genre extends Model
 {
@@ -7,14 +8,13 @@ export class Genre extends Model
 		super("genres");
 	}
 
-	search(name)
+	static async search(name)
 	{
-		await this.all(`WHERE name LIKE '%${name}%'`);
+		return this.all(`WHERE name LIKE '%${name}%'`);
 	}
 
-	titles()
+	async titles()
 	{
-		// TODO
-		return [];
+		return Title.all(`WHERE genre_id = ${this._rowid_}`);
 	}
 }

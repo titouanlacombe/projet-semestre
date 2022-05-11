@@ -1,4 +1,5 @@
 import { Model } from "./Model.js";
+import { Band } from "./Band.js";
 
 export class Artist extends Model
 {
@@ -20,18 +21,31 @@ export class Artist extends Model
 
 	getCleanName()
 	{
-		// TODO
+		if (!this.firstname && !this.lastname) {
+			return this.stagename;
+		}
+
+		let name = `${this.firstname} ${this.lastname}`;
+		name.trim();
+		if (this.stagename) {
+			name += ` (${this.stagename})`
+		}
+
+		return name;
 	}
 
-	titles()
+	async titles()
 	{
-		// TODO
-		return [];
+		return Database.sql(`
+			SELECT * FROM titles
+			LEFT JOIN worked_on ON title_id = title._rowid_
+			WHERE artist_id = ${this._rowid_};`,
+			[], "all"
+		);
 	}
 
-	band()
+	async band()
 	{
-		// TODO
-		return null;
+		return Band.find(this.band_id);
 	}
 }
