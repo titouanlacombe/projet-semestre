@@ -11,9 +11,7 @@ async function launchImport()
 	let path = response.filePaths[0];
 	console.log(`Launching import on ${path}`);
 
-	await ImportManager.import(path);
-
-	console.log(`Import finished`);
+	ImportManager.import(path);
 }
 
 window.addEventListener('DOMContentLoaded', () =>

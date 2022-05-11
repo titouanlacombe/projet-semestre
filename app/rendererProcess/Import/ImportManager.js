@@ -9,10 +9,10 @@ export class ImportManager
 		"flac",
 	];
 
-	static async import(path)
+	static import(path)
 	{
-		let file_it = new FileIterator(this.import_file, true);
-		file_it.start(path);
+		// Launch file iterator on path with import_file callback
+		new FileIterator(this.import_file, true).start(path);
 	}
 
 	static async import_file(file)
