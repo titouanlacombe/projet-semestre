@@ -4,11 +4,6 @@ import { extension } from "../Utils/Path.js";
 
 export class ImportManager
 {
-	static extension_whitelist = [
-		"mp3",
-		"flac",
-	];
-
 	static import(path)
 	{
 		// Launch file iterator on path with import_file callback
@@ -17,10 +12,15 @@ export class ImportManager
 
 	static async import_file(file)
 	{
+		const extension_whitelist = [
+			"mp3",
+			"flac",
+		];
+
 		// Ignore non recognised files
-		let ext = extension(file_it.get().path);
-		if (!this.extension_whitelist.includes(ext)) {
-			console.log(`Ignoring ${file_it.get().path} because of extension whitelist (${ext})`);
+		let ext = extension(file.path);
+		if (!extension_whitelist.includes(ext)) {
+			console.log(`Ignoring ${file.path} because of extension whitelist (${ext})`);
 			return;
 		}
 
