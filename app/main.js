@@ -3,6 +3,8 @@ const path = require('path');
 const db = require('./mainProcess/DatabaseLink');
 const { getFiles } = require("./mainProcess/SystemFS");
 
+let mainWindow = null;
+
 app.whenReady().then(() =>
 {
 	// --- API ---
@@ -13,7 +15,7 @@ app.whenReady().then(() =>
 	// System
 	ipcMain.handle('systemDialog', async (event, params) =>
 	{
-		return dialog.showOpenDialog({ properties: params });
+		return dialog.showOpenDialog(mainWindow, { properties: params });
 	});
 
 	// DB
@@ -24,7 +26,7 @@ app.whenReady().then(() =>
 	});
 
 	// --- Framework ---
-	createWindow();
+	mainWindow = createWindow();
 
 	// For macOS
 	app.on('activate', () =>
@@ -46,8 +48,8 @@ function createWindow()
 	});
 
 	win.maximize();
-
 	win.loadFile('app/index.html');
+	return win;
 }
 
 app.on('window-all-closed', () =>
