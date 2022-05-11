@@ -1,17 +1,21 @@
-Cahier des charges:
-https://docs.google.com/document/d/1maEiRUrZ5rS7LMbFP0BVT9Tz4JJUHqTBSA_U6Df0gtg/edit?usp=sharing
+urgent {
+	Cahier des charges:
+	https://docs.google.com/document/d/1maEiRUrZ5rS7LMbFP0BVT9Tz4JJUHqTBSA_U6Df0gtg/edit?usp=sharing
+}
 
-clean api files
-open / close folder
-ignore hidden files
-https://stackabuse.com/a-sqlite-tutorial-with-node-js/
+titou {
+	ignore hidden files
+	start at music folder
+	Add contraints to DB
+}
 
-database save path (config / in main ?)
+nathan {
+	Sidebar as electron menu ???
+}
 
-create npm scripts for build with windows (flemme)
-configure root folder with OS file explorer
+optionels {
+	create npm scripts for build with windows (flemme)
 
-meilleur modèle pour les groupe de musiques (many to many + time start-end) meme si on a pas asser d'infos pour remplir
-Sidebar as electron menu
-
-Add contraints to DB
+	database save path (config / in main ?)
+	meilleur modèle pour les groupe de musiques (many to many + time start-end) meme si on a pas asser d'infos pour remplir
+}
