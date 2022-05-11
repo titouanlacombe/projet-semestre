@@ -53,7 +53,7 @@ class Database
 		this.connect();
 	}
 
-	sql(sql, params, method)
+	async sql(sql, params, method)
 	{
 		// method precondition
 		if (["run", "get", "all"].indexOf(method) == -1) {
