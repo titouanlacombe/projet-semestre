@@ -1,17 +1,17 @@
-// TODO Transform iterator to use callback each time file is found
 export class FileIterator
 {
-	constructor(recursive = true)
+	constructor(callback, recursive = true)
 	{
 		this.recursive = recursive;
+		this.callback = callback;
 	}
 
-	async start(path)
+	start(path)
 	{
 		this.queue = [];
 
 		// Init queue
-		await this.open_dir(path);
+		this.open_dir(path);
 	}
 
 	async open_dir(path)
@@ -19,24 +19,15 @@ export class FileIterator
 		let files = await window.electronAPI.getFiles(path);
 		for (const file of files) {
 
-			// If recursive mode && directory found
+			// Add path because user doesn't have this info
+			file.path = path + "/" + file.name;
+
 			if (this.recursive && file.isDir) {
-				await this.open_dir(path + "/" + file.name);
+				this.open_dir(file.path);
 			}
 
-			// Add file to queue
-			this.queue.push(file);
+			// Callback with file
+			this.callback(file);
 		}
-	}
-
-	iterate()
-	{
-		this.queue.shift();
-		return this.queue.length > 0;
-	}
-
-	get()
-	{
-		return this.queue[0] ?? null;
 	}
 }

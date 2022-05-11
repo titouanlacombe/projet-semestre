@@ -1,27 +1,29 @@
 import { FileIterator } from "./FileIterator.js";
 import { File } from "../Models/File.js";
+import { extension } from "../../Utils/Path";
 
 export class ImportManager
 {
+	static extension_whitelist = [
+		"mp3",
+		"flac",
+	];
+
 	static async import(path)
 	{
-		let file_it = new FileIterator(true);
-		await file_it.start(path);
-
-		do {
-			// Ignore directories
-			// TODO ignore non recognised files
-			if (file_it.get().isDir) {
-				continue;
-			}
-
-			await this.import_file(file_it.get());
-		}
-		while (file_it.iterate());
+		let file_it = new FileIterator(this.import_file, true);
+		file_it.start(path);
 	}
 
 	static async import_file(file)
 	{
+		// Ignore non recognised files
+		let ext = extension(file_it.get().path);
+		if (!this.extension_whitelist.includes(ext)) {
+			console.log(`Ignoring ${file_it.get().path} because of extension whitelist (${ext})`);
+			return;
+		}
+
 		let clean_path = JSON.stringify(file.path);
 
 		let entry = await File.get(`WHERE path = ${clean_path}`);
@@ -32,7 +34,7 @@ export class ImportManager
 
 		File.create({
 			path: clean_path,
-			imported_at: Date.now().toUTCString()
+			imported_at: JSON.stringify(new Date().toString())
 		});
 	}
 }

@@ -14,8 +14,6 @@ module.exports = {
 			try {
 				results.push({
 					name: file,
-					// TODO remove
-					path: fullPath,
 					isDir: fs.statSync(fullPath).isDirectory()
 				});
 			}

@@ -1,3 +1,5 @@
+import { dirname, filename, is_hidden } from "../../Utils/Path";
+
 // Anchors
 const fileAnchor = "fileExplorerFile:/";
 const childsAnchor = "fileExplorerChilds:/";
@@ -98,7 +100,6 @@ function closeDirectory(directory)
 {
 	// Get childs list & hide it
 	let childs = getChilds(directory);
-
 	childs.hidden = true;
 }
 
@@ -129,23 +130,6 @@ function toggleDirectory(path)
 	}
 
 	icons[0].className = opened ? dirOpenedIcon : dirClosedIcon;
-}
-
-function dirname(path)
-{
-	let separatorIndex = Math.max(path.lastIndexOf("\\"), path.lastIndexOf("/"));
-	return path.substring(0, separatorIndex + 1);
-}
-
-function filename(path)
-{
-	return path.replace(/^.*[\\\/]/, '');
-}
-
-// Return wether filename starts with a '.'
-function is_hidden(file_name)
-{
-	return file_name[0] == '.';
 }
 
 window.addEventListener('DOMContentLoaded', async () =>
