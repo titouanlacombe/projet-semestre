@@ -9,14 +9,14 @@ export class Database
 		return (await this.sql("PRAGMA user_version", [], "get")).user_version;
 	}
 
-	static async dropDatabase()
+	static async drop()
 	{
 		await window.electronAPI.dropDB();
 		console.log("Droped Database");
 	}
 
 	// Create tables & insert static data
-	static async seedDatabase()
+	static async seed()
 	{
 		let requests = [
 			// --- Database version ---
@@ -86,7 +86,7 @@ export class Database
 		return window.electronAPI.sql(sql, params, method);
 	}
 
-	static async initDB()
+	static async init()
 	{
 		// Do nothing if DB is at the right version
 		let dbver = await this.getVersion();
@@ -95,12 +95,18 @@ export class Database
 		}
 
 		console.log("Warning: DB version missmatch: ", dbver, this.version);
-		await this.dropDatabase();
-		await this.seedDatabase();
+		await this.drop();
+		await this.seed();
+	}
+
+	static async reset()
+	{
+		await this.drop();
+		await this.init();
 	}
 }
 
 window.addEventListener('DOMContentLoaded', () =>
 {
-	Database.initDB();
+	Database.init();
 });
