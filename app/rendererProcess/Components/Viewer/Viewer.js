@@ -2,16 +2,24 @@ export class Viewer
 {
     static openAlbum(album)
     {
-        const win = new BrowserWindow({
-            autoHideMenuBar: true,
-            icon: "./resources/icon.png",
-            webPreferences: {
-                preload: path.resolve('app/preload.js'),
-            }
-        });
+        console.log(album);
+        let resultDivs = document.getElementById("results");
+        resultDivs.style.display = "none";
 
-        win.maximize();
-        win.loadFile('app/album.html');
-        return win;
+        let albumDiv = document.createElement('div');
+        albumDiv.className = "Album";
+        document.getElementById("player").appendChild(albumDiv);
+
+    }
+
+    static openTitle(title)
+    {
+        console.log(title);
+    }
+
+    static openArtist(artist)
+    {
+        console.log(artist);
     }
 }
+
