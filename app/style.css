@@ -200,3 +200,28 @@ body {
     font-size: 20px;
     text-align: center;
 }
+
+#album {
+    position: absolute;
+    top: 60px;
+    left: 5%;
+    height: calc(90% - 50px);
+    width: 90%;
+    background-color: #000000;
+}
+
+#album .flex2 {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.flex2 div {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
