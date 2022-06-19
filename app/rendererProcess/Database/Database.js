@@ -22,28 +22,43 @@ export class Database
             // --- Database version ---
             `PRAGMA user_version = ${this.version}`,
 
+            //TODO: add to UML
             // --- albums ---
             `CREATE TABLE albums (
-                album_id INTEGER PRIMARY KEY,
-				name TEXT NOT NULL,
-				released_at TEXT DEFAULT NULL
+				name TEXT NOT NULL,                
+                artist_id INTEGER NOT NULL REFERENCES artists(rowid),
+				released_at TEXT DEFAULT NULL,
+                UNIQUE(name, artist_id)
 			);`,
-            `INSERT INTO albums(name) VALUES ('Mezzanine')`,
+            `INSERT INTO albums(name, artist_id) VALUES ('Mezzanine', 1)`,
+            `INSERT INTO albums(name, artist_id) VALUES ('Mezzanine', 2)`,
+            `INSERT INTO albums(name, artist_id) VALUES ('Mezzanine II', 1)`,
+            `INSERT INTO albums(name, artist_id) VALUES ('Allumer le feu', 5)`,
 
             // --- bands ---
             `CREATE TABLE bands (
-                band_id INTEGER PRIMARY KEY,
-				name TEXT NOT NULL
+				name TEXT NOT NULL,
+                UNIQUE(name)
 			);`,
+
+            `INSERT INTO bands(name) VALUES ('The Does')`,
 
             // --- artists ---
             `CREATE TABLE artists (
-                artist_id INTEGER PRIMARY KEY,
 				firstname TEXT,
-				lastname TEXT,
+				lastname TEXT NOT NULL,
 				stagename TEXT,
-				band_id INTEGER
+				band_id INTEGER REFERENCES bands(band_id)
 			);`,
+
+            `INSERT INTO artists(firstname, lastname, stagename) VALUES ("Antoine", "Daniel", "Antoine Daniel");`,
+            `INSERT INTO artists(firstname, lastname, stagename) VALUES ("Titouan", "Lacombe", "DJ Titou");`,
+
+            // create unique artists examples
+            `INSERT INTO artists(firstname, lastname, stagename, band_id) VALUES ("John", "Doe", "John Doe", "The Does");`,
+            `INSERT INTO artists(firstname, lastname, stagename, band_id) VALUES ("Jane", "Doe", "Jane Doe", "The Does");`,
+            `INSERT INTO artists(firstname, lastname, stagename) VALUES ("Johnny", "Halliday", "Jonny Halliday");`,
+
 
             // --- worked_on ---
             `CREATE TABLE worked_on (
@@ -54,26 +69,35 @@ export class Database
 
             // --- titles ---
             `CREATE TABLE titles (
-                title_id INTEGER PRIMARY KEY,
 				name TEXT NOT NULL,
-				genre TEXT,
-				file_id INTEGER NOT NULL,
-				album_id INTEGER,
-				released_at TEXT
+				genre_id INTEGER REFERENCES genres(rowid),
+				file_id INTEGER references files(file_id),
+				album_id INTEGER references albums(rowid),
+				released_at TEXT,
+                UNIQUE(name, album_id)
 			);`,
 
             // --- files ---
             `CREATE TABLE files (
-                file_id INTEGER PRIMARY KEY,
 				path TEXT NOT NULL,
-				imported_at TEXT NOT NULL
+				imported_at TEXT NOT NULL,
+                CHECK(path NOT NULL)
 			);`,
+
+
+            // insert file example
+            `INSERT INTO files values ('./sound.mp3', '${new Date(Date.now()).toUTCString()}');`,
 
             // --- genres ---
             `CREATE TABLE genres (
-                genre_id INTEGER PRIMARY KEY,
-				name TEXT NOT NULL
+				name TEXT NOT NULL,
+                UNIQUE(name)
 			);`,
+
+            // insert genre example
+            `INSERT INTO genres values ('Rock');`,
+
+
         ];
 
         for (let request of requests) {
