@@ -1,51 +1,74 @@
 import { Model } from "./Model.js";
 import { Band } from "./Band.js";
+import { Database } from "../Database/Database.js";
 
 export class Artist extends Model
 {
-	static table = "artists";
+    static table = "artists";
 
-	static async search(name)
-	{
-		let promise1 = this.all(`WHERE firstname LIKE '%${name}%'`);
-		let promise2 = this.all(`WHERE lastname LIKE '%${name}%'`);
-		let promise3 = this.all(`WHERE stagename LIKE '%${name}%'`);
+    static async searchid(name)
+    {
+        return Database.sql(`
+            SELECT ROWID FROM artists WHERE stagename LIKE '${name}'`,
+            [], 'get'
+        );
 
-		let results = [];
-		results.concat(await promise1);
-		results.concat(await promise2);
-		results.concat(await promise3);
+    }
 
-		return results;
-	}
+    static async search(name)
+    {
+        let promise1 = this.all(`WHERE firstname LIKE '%${name}%'`);
+        let promise2 = this.all(`WHERE lastname LIKE '%${name}%'`);
+        let promise3 = this.all(`WHERE stagename LIKE '%${name}%'`);
 
-	getCleanName()
-	{
-		if (!this.firstname && !this.lastname) {
-			return this.stagename;
-		}
+        let results = [];
+        let artist = await promise1;
+        results = results.concat(artist);
 
-		let name = `${this.firstname} ${this.lastname}`;
-		name.trim();
-		if (this.stagename) {
-			name += ` (${this.stagename})`
-		}
+        artist = await promise2;
+        if (artist.length > 0 && (results.some(element =>
+        {
+            return (element.firstname === artist.firstname)
+        })))
+            results = results.concat(artist);
 
-		return name;
-	}
+        artist = await promise3;
+        if (artist.length > 0 && (results.some(element =>
+        {
+            return (element.firstname === artist.firstname)
+        })))
+            results = results.concat(artist);
 
-	async titles()
-	{
-		return Database.sql(`
+        return results;
+    }
+
+    getCleanName()
+    {
+        if (!this.firstname && !this.lastname) {
+            return this.stagename;
+        }
+
+        let name = `${this.firstname} ${this.lastname}`;
+        name.trim();
+        if (this.stagename) {
+            name += ` (${this.stagename})`
+        }
+
+        return name;
+    }
+
+    async titles()
+    {
+        return Database.sql(`
 			SELECT * FROM titles
 			LEFT JOIN worked_on ON title_id = title._rowid_
 			WHERE artist_id = ${this._rowid_};`,
-			[], "all"
-		);
-	}
+            [], "all"
+        );
+    }
 
-	async band()
-	{
-		return Band.find(this.band_id);
-	}
+    async band()
+    {
+        return Band.find(this.band_id);
+    }
 }
