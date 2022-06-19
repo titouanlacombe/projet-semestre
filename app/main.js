@@ -2,7 +2,6 @@ const { app, BrowserWindow, ipcMain, dialog, Menu } = require('electron');
 const path = require('path');
 const db = require('./mainProcess/DatabaseLink');
 const { getFiles } = require("./mainProcess/SystemFS");
-const addTitle = require('./rendererProcess/Add/Add');
 
 let mainWindow = null;
 
@@ -36,38 +35,16 @@ const template = [
     },
     // { role: 'editMenu' }
     {
-        label: 'DB',
+        label: 'Bibliothèque',
         submenu: [
             {
                 label: 'Ajouter',
                 submenu: [
-                    { label: 'Titre', click: () => addTitle() },
-                    { label: 'Artiste' },
-                    { label: 'Album' },
+                    { label: 'Titre', click: () => mainWindow.webContents.send('update-title', 1) },
+                    { label: 'Artiste', click: () => mainWindow.webContents.send('update-artist', 1) },
+                    { label: 'Album', click: () => mainWindow.webContents.send('update-album', 1) },
                 ]
-            },
-            { label: 'Modifier' },
-            { type: 'separator' },
-            { role: 'cut' },
-            { role: 'copy' },
-            { role: 'paste' },
-            ...(isMac ? [
-                { role: 'pasteAndMatchStyle' },
-                { role: 'delete' },
-                { role: 'selectAll' },
-                { type: 'separator' },
-                {
-                    label: 'Speech',
-                    submenu: [
-                        { role: 'startSpeaking' },
-                        { role: 'stopSpeaking' }
-                    ]
-                }
-            ] : [
-                { role: 'delete' },
-                { type: 'separator' },
-                { role: 'selectAll' }
-            ])
+            }
         ]
     },
     // { role: 'viewMenu' }
@@ -99,19 +76,6 @@ const template = [
             ] : [
                 { role: 'close' }
             ])
-        ]
-    },
-    {
-        role: 'help',
-        submenu: [
-            {
-                label: 'Learn More',
-                click: async () =>
-                {
-                    const { shell } = require('electron')
-                    await shell.openExternal('https://electronjs.org')
-                }
-            }
         ]
     }
 ]
