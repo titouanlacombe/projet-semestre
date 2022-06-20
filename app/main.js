@@ -43,6 +43,8 @@ const template = [
                     { label: 'Titre', click: () => mainWindow.webContents.send('update-title', 1) },
                     { label: 'Artiste', click: () => mainWindow.webContents.send('update-artist', 1) },
                     { label: 'Album', click: () => mainWindow.webContents.send('update-album', 1) },
+                    // new band
+                    { label: 'Groupe', click: () => mainWindow.webContents.send('update-band', 1) },
                 ]
             }
         ]

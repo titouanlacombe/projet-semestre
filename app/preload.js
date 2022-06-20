@@ -9,4 +9,6 @@ contextBridge.exposeInMainWorld('electronAPI', {
     onNewTitle: (callback) => ipcRenderer.on('update-title', callback),
     onNewAlbum: (callback) => ipcRenderer.on('update-album', callback),
     onNewArtist: (callback) => ipcRenderer.on('update-artist', callback),
+    // new band
+    onNewBand: (callback) => ipcRenderer.on('update-band', callback),
 });
