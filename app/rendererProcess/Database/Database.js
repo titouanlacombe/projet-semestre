@@ -9,42 +9,63 @@ export class Database
         return (await this.sql("PRAGMA user_version", [], "get")).user_version;
     }
 
-    static async dropDatabase()
+
+    static async drop()
     {
         await window.electronAPI.dropDB();
         console.log("Droped Database");
     }
 
     // Create tables & insert static data
-    static async seedDatabase()
+
+    static async seed()
     {
-        console.log("Seeding Database");
         let requests = [
             // --- Database version ---
             `PRAGMA user_version = ${this.version}`,
 
+            //TODO: add to UML
             // --- albums ---
             `CREATE TABLE albums (
-				name TEXT NOT NULL,
-				released_at TEXT DEFAULT NULL
+				name TEXT NOT NULL,                
+                artist_id INTEGER NOT NULL REFERENCES artists(rowid),
+				released_at TEXT DEFAULT NULL,
+                UNIQUE(name, artist_id)
 			);`,
-            `INSERT INTO albums(name) VALUES ('Mezzanine')`,
-            `INSERT INTO albums(name) VALUES ('Mezzanine II')`,
+            `INSERT INTO albums(name, artist_id) VALUES ('Mezzanine', 1)`,
+            `INSERT INTO albums(name, artist_id) VALUES ('Mezzanine', 2)`,
+            `INSERT INTO albums(name, artist_id) VALUES ('Mezzanine II', 1)`,
+            `INSERT INTO albums(name, artist_id) VALUES ('Allumer le feu', 5)`,
 
             // --- bands ---
             `CREATE TABLE bands (
-				name TEXT NOT NULL
+				name TEXT NOT NULL,
+                UNIQUE(name)
 			);`,
+
+            `INSERT INTO bands(name) VALUES ('The Does')`,
 
             // --- artists ---
             `CREATE TABLE artists (
 				firstname TEXT,
 				lastname TEXT,
-				stagename TEXT,
-				band_id INTEGER
+				stagename TEXT NOT NULL,
+				band_id INTEGER REFERENCES bands(rowid),
+                UNIQUE(stagename)
 			);`,
             `INSERT INTO artists VALUES ('MezzanineArtist', 'MezzanineArtist', 'MezzanineArtist', 1)`,
             `INSERT INTO artists VALUES ('MezzanineIIArtist', 'MezzanineIIArtist', 'MezzanineIIArtist', 2)`,
+
+
+            `INSERT INTO artists(firstname, lastname, stagename) VALUES ("Antoine", "Daniel", "Antoine Daniel");`,
+            `INSERT INTO artists(firstname, lastname, stagename) VALUES ("Titouan", "Lacombe", "DJ Titou");`,
+
+            // create unique artists examples
+            `INSERT INTO artists(firstname, lastname, stagename, band_id) VALUES ("John", "Doe", "John Doe", "1");`,
+            `INSERT INTO artists(firstname, lastname, stagename, band_id) VALUES ("Jane", "Doe", "Jane Doe", "1");`,
+            `INSERT INTO artists(firstname, lastname, stagename) VALUES ("Johnny", "Halliday", "Johnny Halliday");`,
+
+
 
             // --- worked_on ---
             `CREATE TABLE worked_on (
@@ -56,24 +77,44 @@ export class Database
             // --- titles ---
             `CREATE TABLE titles (
 				name TEXT NOT NULL,
-				genre TEXT,
-				file_id INTEGER NOT NULL,
-				album_id INTEGER,
-				released_at TEXT
+				genre_id INTEGER REFERENCES genres(rowid),
+				file_id INTEGER references files(file_id),
+				album_id INTEGER references albums(rowid),
+				released_at TEXT,
+                UNIQUE(name, album_id)
 			);`,
             `INSERT INTO titles(name, file_id) VALUES ('MezzanineTitle', '...')`,
-
 
             // --- files ---
             `CREATE TABLE files (
 				path TEXT NOT NULL,
-				imported_at TEXT NOT NULL
+				imported_at TEXT NOT NULL,
+                CHECK(path NOT NULL)
 			);`,
+
+
+
+            // insert file example
+            `INSERT INTO files values ('./sound.mp3', '${new Date(Date.now()).toUTCString()}');`,
 
             // --- genres ---
             `CREATE TABLE genres (
-				name TEXT NOT NULL
+				name TEXT NOT NULL,
+                UNIQUE(name)
 			);`,
+
+            // insert genres
+            `INSERT INTO genres values ('Rock');`,
+            `INSERT INTO genres values ('Pop');`,
+            `INSERT INTO genres values ('Metal');`,
+            `INSERT INTO genres values ('Jazz');`,
+            `INSERT INTO genres values ('Electro');`,
+            `INSERT INTO genres values ('Folk');`,
+            `INSERT INTO genres values ('Blues');`,
+            `INSERT INTO genres values ('Reggae');`,
+            `INSERT INTO genres values ('Classique');`,
+            `INSERT INTO genres values ('Other');`,
+
         ];
 
         for (let request of requests) {
@@ -88,7 +129,8 @@ export class Database
         return window.electronAPI.sql(sql, params, method);
     }
 
-    static async initDB()
+
+    static async init()
     {
         // Do nothing if DB is at the right version
         let dbver = await this.getVersion();
@@ -97,12 +139,19 @@ export class Database
         }
 
         console.log("Warning: DB version missmatch: ", dbver, this.version);
-        await this.dropDatabase();
-        await this.seedDatabase();
+
+        await this.drop();
+        await this.seed();
+    }
+
+    static async reset()
+    {
+        await this.drop();
+        await this.init();
     }
 }
 
 window.addEventListener('DOMContentLoaded', () =>
 {
-    Database.initDB();
+    Database.init();
 });

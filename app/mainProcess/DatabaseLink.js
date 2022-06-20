@@ -53,7 +53,7 @@ class Database
 		this.connect();
 	}
 
-	sql(sql, params, method)
+	async sql(sql, params, method)
 	{
 		// method precondition
 		if (["run", "get", "all"].indexOf(method) == -1) {
@@ -65,16 +65,10 @@ class Database
 			throw new Error('Error: database not loaded');
 		}
 
-		// console.log("Executing " + method);
-		console.log("SQL: " + sql);
-		// console.log("Values", params);
-
-		return new Promise((resolve, reject) =>
+		let promise_result = await new Promise((resolve, reject) =>
 		{
 			this.connexion[method](sql, params, (err, result) =>
 			{
-				console.log(err, result);
-
 				if (err) {
 					reject(err);
 				}
@@ -82,6 +76,14 @@ class Database
 				resolve(result);
 			});
 		});
+
+		// Remove spaces for logging
+		let request = await sql.replace(/(\s|\n)+/g, " ");
+		let params_json = JSON.stringify(params);
+		let result_json = JSON.stringify(promise_result);
+		console.log(`SQL ${method}: ${request}\nPARAMS: ${params_json}\nRESULT: ${result_json}`);
+
+		return promise_result;
 	}
 }
 

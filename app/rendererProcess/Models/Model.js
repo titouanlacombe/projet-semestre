@@ -24,12 +24,12 @@ export class Model
 
 	static async get(request, params)
 	{
-		return this.generateModel(await this.sql(request, params, 'get'));
+		return this.generateModel(await this.select(request, params, 'get'));
 	}
 
 	static async all(request, params)
 	{
-		let objects = await this.sql(request, params, 'all');
+		let objects = await this.select(request, params, 'all');
 
 		let results = [];
 		for (const iterator of objects) {
@@ -39,8 +39,23 @@ export class Model
 		return results;
 	}
 
-	static async sql(request, params, method)
+	static async select(request, params, method)
 	{
 		return Database.sql(`SELECT * FROM ${this.table} ${request}`, params, method);
+	}
+
+	static async create(object)
+	{
+		let keys = Object.keys(object);
+
+		let values = [];
+		for (const key of keys) {
+			values.push(object[key]);
+		}
+
+		Database.sql(`
+			INSERT INTO ${this.table}(${keys.join(", ")})
+			VALUES (${values.join(", ")})
+		`);
 	}
 }

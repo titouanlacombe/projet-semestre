@@ -13,8 +13,8 @@ module.exports = {
 
 			try {
 				results.push({
-					"name": file,
-					"isDir": fs.statSync(fullPath).isDirectory()
+					name: file,
+					isDir: fs.statSync(fullPath).isDirectory()
 				});
 			}
 			catch (error) {
