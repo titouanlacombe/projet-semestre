@@ -6,6 +6,7 @@ export class Artist extends Model
 {
     static table = "artists";
 
+
     static async searchid(name)
     {
         return Database.sql(`

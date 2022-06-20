@@ -56,16 +56,18 @@ body {
 }
 
 #player {
+    position: relative;
   /* Same as the width of the sidenav */
-  margin-left: 200px;
+  margin-left: 212px;
   /* padding: 10px; */
 
-  width: calc(100% - 200px);
+  width: calc(100% - 212px);
   height: 100%;
   background: radial-gradient(black, #674ea7);
 }
 
 #player h1 {
+    z-index: 1;
   margin-top: auto;
   padding: 40px 0px 15px 0px;
   text-align: center;
@@ -95,6 +97,7 @@ body {
 
 .topnav {
   overflow: hidden;
+  z-index: 2;
   background-color: rgb(37, 37, 37);
 }
 
@@ -123,7 +126,7 @@ body {
   display: none;
 }
 
-.topnav .search-container {
+.search-container {
   float: right;
 }
 
@@ -134,8 +137,25 @@ body {
   border: none;
   border-radius: 5px;
   width: 200px;
-  transition: width 0.5s ease-out;
+  /* transition: width 0.5s ease-out; */
 }
+
+
+/* .topnav input[type="search"]:hover, .topnav input[type="search"]:focus {
+    width: 300px;
+} */
+
+.topnav button {
+    float: right;
+    display: block;
+    padding: 7px 10px;
+    margin: 5px 4px 0 0;
+    color: rgb(148 113 239);
+    border: 2px solid rgb(148 113 239);
+    background-color: #3f3066;
+    font-size: 17px;
+    cursor: pointer;
+    border-radius: 5px;
 
 .topnav input[type="search"]:hover,
 .topnav input[type="search"]:focus {
@@ -153,14 +173,77 @@ body {
   font-size: 17px;
   cursor: pointer;
   border-radius: 5px;
+
 }
 
-.topnav .search-container button:hover {
+.topnav input {
+    margin-right: 4px;
+}
+
+.topnav button:hover {
   background: rgb(148 113 239);
   color: #3f3066;
   border: 2px solid #3f3066;
 }
 
+#results {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 500px;
+    height: 500px;
+    margin: 0 auto;
+    transform: translate(-50%, -50%);
+    overflow-y: scroll;
+    overflow-x: hidden;
+    background-color: #3f3066;
+    display: none;
+
+    box-shadow: 0 0 3px #000000;
+}
+
+#results::-webkit-scrollbar {
+    display: none;
+}
+
+#results div {
+    padding: 10px;
+    border-bottom: black solid 1px;
+}
+
+#results :where(.title, .album, .artist):hover {
+    background-color: #5b4495;
+}
+
+#results .header {
+    font-size: 20px;
+    text-align: center;
+}
+
+#album {
+    position: absolute;
+    top: 60px;
+    left: 5%;
+    height: calc(90% - 50px);
+    width: 90%;
+    background-color: #000000;
+}
+
+#album .flex2 {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.flex2 div {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
 .container {
   position: absolute;
   top: calc(10% + 50px);

@@ -9,6 +9,7 @@ export class Database
         return (await this.sql("PRAGMA user_version", [], "get")).user_version;
     }
 
+
     static async drop()
     {
         await window.electronAPI.dropDB();
@@ -16,6 +17,7 @@ export class Database
     }
 
     // Create tables & insert static data
+
     static async seed()
     {
         let requests = [
@@ -51,6 +53,9 @@ export class Database
 				band_id INTEGER REFERENCES bands(rowid),
                 UNIQUE(stagename)
 			);`,
+            `INSERT INTO artists VALUES ('MezzanineArtist', 'MezzanineArtist', 'MezzanineArtist', 1)`,
+            `INSERT INTO artists VALUES ('MezzanineIIArtist', 'MezzanineIIArtist', 'MezzanineIIArtist', 2)`,
+
 
             `INSERT INTO artists(firstname, lastname, stagename) VALUES ("Antoine", "Daniel", "Antoine Daniel");`,
             `INSERT INTO artists(firstname, lastname, stagename) VALUES ("Titouan", "Lacombe", "DJ Titou");`,
@@ -59,6 +64,7 @@ export class Database
             `INSERT INTO artists(firstname, lastname, stagename, band_id) VALUES ("John", "Doe", "John Doe", "1");`,
             `INSERT INTO artists(firstname, lastname, stagename, band_id) VALUES ("Jane", "Doe", "Jane Doe", "1");`,
             `INSERT INTO artists(firstname, lastname, stagename) VALUES ("Johnny", "Halliday", "Johnny Halliday");`,
+
 
 
             // --- worked_on ---
@@ -77,6 +83,7 @@ export class Database
 				released_at TEXT,
                 UNIQUE(name, album_id)
 			);`,
+            `INSERT INTO titles(name, file_id) VALUES ('MezzanineTitle', '...')`,
 
             // --- files ---
             `CREATE TABLE files (
@@ -84,6 +91,7 @@ export class Database
 				imported_at TEXT NOT NULL,
                 CHECK(path NOT NULL)
 			);`,
+
 
 
             // insert file example
@@ -107,7 +115,6 @@ export class Database
             `INSERT INTO genres values ('Classique');`,
             `INSERT INTO genres values ('Other');`,
 
-
         ];
 
         for (let request of requests) {
@@ -122,6 +129,7 @@ export class Database
         return window.electronAPI.sql(sql, params, method);
     }
 
+
     static async init()
     {
         // Do nothing if DB is at the right version
@@ -131,6 +139,7 @@ export class Database
         }
 
         console.log("Warning: DB version missmatch: ", dbver, this.version);
+
         await this.drop();
         await this.seed();
     }
