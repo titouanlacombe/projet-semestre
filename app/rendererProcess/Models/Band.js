@@ -1,17 +1,52 @@
 import { Artist } from "./Artist.js";
 import { Model } from "./Model.js";
+import { Database } from "../Database/Database.js";
 
 export class Band extends Model
 {
-	static table = "bands";
+    static table = "bands";
 
-	static async search(name)
-	{
-		return this.all(`WHERE name LIKE '%${name}%'`);
-	}
+    static async searchid(name)
+    {
+        return Database.sql(`
+            SELECT ROWID FROM bands WHERE name LIKE '%${name}%'`,
+            [], 'get'
+        );
 
-	async artists()
-	{
-		return Artist.all(`WHERE band_id = ${this._rowid_}`);
-	}
+    }
+
+    static async search(name)
+    {
+        return this.all(`WHERE name LIKE '%${name}%'`);
+    }
+
+    async artists()
+    {
+        return Artist.all(`WHERE band_id = ${this._rowid_}`);
+    }
+
+    async create()
+    {
+        return Database.sql(`
+            INSERT INTO bands(name) VALUES ('${this.name}')`,
+            [], 'get'
+        );
+    }
+
+    async createBand()
+    {
+        if (!this.name) {
+            alert("Veuillez entrer un nom de groupe");
+        }
+        else {
+            document.getElementsByClassName("container")[0].remove();
+            try {
+                await this.create();
+                alert("Groupe créé avec succès.");
+            }
+            catch (error) {
+                alert("Erreur lors de la création du groupe.");
+            }
+        }
+    }
 }
