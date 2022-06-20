@@ -4,6 +4,8 @@ import { Database } from "../Database/Database.js";
 
 export class Genre extends Model
 {
+    static table = "genres";
+
     constructor()
     {
         super("genres");
@@ -14,6 +16,12 @@ export class Genre extends Model
         return Database.sql(`
             SELECT ROWID FROM genres WHERE name LIKE '%${name}%'`, [], 'get'
         );
+    }
+
+    // TODO : Either fix all() or use another method to get the genres
+    static async getGenres()
+    {
+        return Genre.all();
     }
 
     static async search(name)
