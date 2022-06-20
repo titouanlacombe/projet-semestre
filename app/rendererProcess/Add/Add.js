@@ -1,12 +1,17 @@
 import { Title } from "../Models/Title.js";
 import { Album } from "../Models/Album.js";
 import { Artist } from "../Models/Artist.js";
+import { Band } from "../Models/Band.js";
+import { Genre } from "../Models/Genre.js";
 
 console.log('Loaded');
 
 // Listener function to add new title
-window.electronAPI.onNewTitle((_event, value) =>
+window.electronAPI.onNewTitle(async (_event, value) =>
 {
+    let genres = await Genre.getGenres();
+    console.log(genres);
+
     // Remove any container divs
     let containerDivs = document.getElementsByClassName("container");
     for (let div of containerDivs) {
@@ -22,7 +27,18 @@ window.electronAPI.onNewTitle((_event, value) =>
     let h2 = document.createElement("h2");
     h2.innerHTML = "Nouveau Titre";
     headerDiv.append(h2);
+    // close button
+    let closeButton = document.createElement("button");
+    closeButton.className = "close-button";
+    closeButton.innerHTML = "X";
+    closeButton.addEventListener("click", (event) =>
+    {
+        event.preventDefault();
+        containerDiv.remove();
+    });
+
     containerDiv.append(headerDiv);
+    headerDiv.append(closeButton);
 
     // Form to add title, artists, genre, album, file
     let form = document.createElement("form");
@@ -61,14 +77,27 @@ window.electronAPI.onNewTitle((_event, value) =>
     form.append(fcDiv);
 
     // Genre
+    // select input for genre
     fcDiv = document.createElement("div");
     fcDiv.className = "form-control";
     label = document.createElement("label");
     label.innerHTML = "Genre";
-    input = document.createElement("input");
-    input.type = "text";
+    input = document.createElement("select");
     input.name = "genre";
-    input.placeholder = "Genre";
+    input.id = "genre";
+    input.className = "select";
+    // add options to select
+    for (let genre of genres) {
+        let option = document.createElement("option");
+        option.value = genre.name;
+        option.innerHTML = genre.name;
+        input.append(option);
+    }
+    let option = document.createElement("option");
+    option.value = "Genre";
+    option.innerHTML = "Genre";
+    option.selected = true;
+    input.append(option);
 
     fcDiv.append(input);
     fcDiv.append(label);
@@ -138,16 +167,13 @@ function nouveauTitre(form)
     let newTitle = new Title();
     newTitle.name = title;
     newTitle.genre_id = genre;
-    // TODO: find album id and error if not exists
     // faire liaisons autre tables si besoin
     newTitle.album_id = album;
     newTitle.file_id = file;
 
     console.log(newTitle.table);
 
-    Title.createTitle(newTitle, artist);
-
-    document.getElementsByClassName("container")[0].focus();
+    newTitle.createTitle(artist);
 
 }
 
@@ -169,7 +195,18 @@ window.electronAPI.onNewAlbum((_event, value) =>
     let h2 = document.createElement("h2");
     h2.innerHTML = "Nouvel Album";
     headerDiv.append(h2);
+    // close button
+    let closeButton = document.createElement("button");
+    closeButton.className = "close-button";
+    closeButton.innerHTML = "X";
+    closeButton.addEventListener("click", (event) =>
+    {
+        event.preventDefault();
+        containerDiv.remove();
+    });
+
     containerDiv.append(headerDiv);
+    headerDiv.append(closeButton);
 
     // Form to add name, release date 
     let form = document.createElement("form");
@@ -185,6 +222,21 @@ window.electronAPI.onNewAlbum((_event, value) =>
     input.type = "text";
     input.name = "name";
     input.placeholder = "Nom";
+
+    fcDiv.append(input);
+    fcDiv.append(label);
+
+    form.append(fcDiv);
+
+    // Artist
+    fcDiv = document.createElement("div");
+    fcDiv.className = "form-control";
+    label = document.createElement("label");
+    label.innerHTML = "Artiste";
+    input = document.createElement("input");
+    input.type = "text";
+    input.name = "artist";
+    input.placeholder = "Artiste";
 
     fcDiv.append(input);
     fcDiv.append(label);
@@ -222,18 +274,22 @@ window.electronAPI.onNewAlbum((_event, value) =>
 
 });
 
-// Send new album to database
+
 function nouvelAlbum(form)
 {
     console.log(form);
     let name = form.name.value;
     let releaseDate = form.releaseDate.value;
+    let artist = form.artist.value;
     console.log(name, releaseDate);
 
     // create new Album object
     let newAlbum = new Album();
     newAlbum.name = name;
+    newAlbum.artist_id = artist;
     newAlbum.release_date = releaseDate;
+
+    newAlbum.createAlbum();
 
 }
 
@@ -255,7 +311,18 @@ window.electronAPI.onNewArtist((_event, value) =>
     let h2 = document.createElement("h2");
     h2.innerHTML = "Nouvel Artiste";
     headerDiv.append(h2);
+    // close button
+    let closeButton = document.createElement("button");
+    closeButton.className = "close-button";
+    closeButton.innerHTML = "X";
+    closeButton.addEventListener("click", (event) =>
+    {
+        event.preventDefault();
+        containerDiv.remove();
+    });
+
     containerDiv.append(headerDiv);
+    headerDiv.append(closeButton);
 
     // Form to add name, release date
     let form = document.createElement("form");
@@ -352,7 +419,90 @@ function nouvelArtist(form)
     let newArtist = new Artist();
     newArtist.firstname = firstname;
     newArtist.lastname = lastname;
-    newArtist.stage_name = stageName;
+    newArtist.stagename = stageName;
+    newArtist.band_id = bandName;
 
-    // TODO: Look for band in db then set band using band id
+    newArtist.createArtist();
+}
+
+window.electronAPI.onNewBand((_event, value) =>
+{
+    // Remove any container divs
+    let containerDivs = document.getElementsByClassName("container");
+    for (let div of containerDivs) {
+        div.remove();
+    }
+
+    let containerDiv = document.createElement("div");
+    containerDiv.className = "container";
+    document.getElementById("player").append(containerDiv);
+
+    let headerDiv = document.createElement("div");
+    headerDiv.className = "header";
+    let h2 = document.createElement("h2");
+    h2.innerHTML = "Nouveau Groupe";
+    headerDiv.append(h2);
+
+    // close button
+    let closeButton = document.createElement("button");
+    closeButton.className = "close-button";
+    closeButton.innerHTML = "X";
+    closeButton.addEventListener("click", (event) =>
+    {
+        event.preventDefault();
+        containerDiv.remove();
+    });
+
+    containerDiv.append(headerDiv);
+    headerDiv.append(closeButton);
+
+
+    // Form to add name
+    let form = document.createElement("form");
+    form.className = "form";
+    containerDiv.append(form);
+
+    // Name
+    let fcDiv = document.createElement("div");
+    fcDiv.className = "form-control";
+    let label = document.createElement("label");
+    label.innerHTML = "Nom";
+    let input = document.createElement("input");
+    input.type = "text";
+    input.name = "name";
+    input.placeholder = "Nom";
+
+    fcDiv.append(input);
+    fcDiv.append(label);
+
+    form.append(fcDiv);
+
+    // Submit form button
+    let submitButton = document.createElement("button");
+    submitButton.className = "submit-button";
+    submitButton.innerHTML = "Ajouter";
+    submitButton.type = "submit";
+    // create new band on click
+    submitButton.addEventListener("click", (event) =>
+    {
+        event.preventDefault();
+        newBand(form);
+    }
+    );
+
+    form.append(submitButton);
+});
+
+function newBand(form)
+{
+    console.log(form);
+    let name = form.name.value;
+    console.log(name);
+
+    // create new Band object
+    let newBand = new Band();
+    newBand.name = name;
+
+    newBand.createBand();
+
 }

@@ -14,7 +14,11 @@ titou {
 
 nathan {
 	Import button with call to API to open explorer then pass chosen path to import Manager
-	Sidebar as electron menu ???
+    Menu -> ajouter une entrée
+    Plusieurs artistes pour un titre ?
+    Message erreur quand pas dans db
+    Ouverture depuis side menu
+
 }
 
 optionels {
