@@ -68,15 +68,14 @@ export class Title extends Model
      * @param {Title} title 
      * @returns 
      */
-    static async createTitle(title, artist_id)
+    async createTitle(artist_id)
     {
-        console.log(title);
+        console.log(this);
 
-        if (!title) {
+        if (!this) {
             return null;
         }
 
-        //TODO close window if error
         let stopError = false;
         let data = false;
 
@@ -99,19 +98,19 @@ export class Title extends Model
 
 
         // Get genre_id from db
-        console.log(title.genre_id);
-        if (title.genre_id) {
+        console.log(this.genre_id);
+        if (this.genre_id && this.genre_id !== 'Genre') {
             data = true;
-            let genre = await Genre.searchid(title.genre_id);
+            let genre = await Genre.searchid(this.genre_id);
             console.log(genre);
 
             if (genre) {
                 console.log(genre.rowid);
-                title.genre_id = genre.rowid;
+                this.genre_id = genre.rowid;
             }
             else {
                 alert("Ce genre n'existe pas, veuillez le créer au préalable.");
-                title.genre_id = null;
+                this.genre_id = null;
                 stopError = true;
             }
 
@@ -120,17 +119,17 @@ export class Title extends Model
 
 
         // Get album_id from db
-        if (title.album_id) {
+        if (this.album_id) {
             data = true;
-            let album = await Album.searchid(title.album_id, artist_id);
+            let album = await Album.searchid(this.album_id, artist_id);
             console.log(album);
 
             if (album) {
                 console.log(album.rowid);
-                title.album_id = album.rowid;
+                this.album_id = album.rowid;
             }
             else {
-                title.album_id = null;
+                this.album_id = null;
                 alert("Aucun album correspondant n'a été trouvé, veuillez le créer au préalable.");
                 stopError = true;
             }
@@ -138,32 +137,39 @@ export class Title extends Model
 
         }
 
-        if (title.file_id) {
+        if (this.file_id) {
             data = true;
-            let file = await File.searchid(title.file_id);
+            let file = await File.searchid(this.file_id);
             console.log(file);
 
             if (file) {
                 console.log(file.rowid);
-                title.file_id = file.rowid;
+                this.file_id = file.rowid;
             }
             else {
-                title.file_id = null;
+                this.file_id = null;
                 alert("Aucun fichier à cet emplacement, vous pourrez l'ajouter au titre par la suite.");
             }
         }
 
 
-        console.log(title);
+        console.log(this);
 
         console.log('stopError : ' + stopError);
         console.log('data : ' + data);
 
         if (stopError === false && data === true) {
+            document.getElementsByClassName("container")[0].remove();
+            try {
+                await this.create();
+                alert("Titre créé avec succès !");
+            }
+            catch (error) {
+                alert("Erreur lors de la création du titre.");
+            }
 
-            return await title.create();
         }
-        else if (title.name) {
+        else if (this.name) {
             alert("Erreur lors de la création du titre.\nVeuillez vérifier les données entrées.");
         }
 
