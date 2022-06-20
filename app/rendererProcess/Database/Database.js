@@ -46,18 +46,19 @@ export class Database
             // --- artists ---
             `CREATE TABLE artists (
 				firstname TEXT,
-				lastname TEXT NOT NULL,
-				stagename TEXT,
-				band_id INTEGER REFERENCES bands(band_id)
+				lastname TEXT,
+				stagename TEXT NOT NULL,
+				band_id INTEGER REFERENCES bands(rowid),
+                UNIQUE(stagename)
 			);`,
 
             `INSERT INTO artists(firstname, lastname, stagename) VALUES ("Antoine", "Daniel", "Antoine Daniel");`,
             `INSERT INTO artists(firstname, lastname, stagename) VALUES ("Titouan", "Lacombe", "DJ Titou");`,
 
             // create unique artists examples
-            `INSERT INTO artists(firstname, lastname, stagename, band_id) VALUES ("John", "Doe", "John Doe", "The Does");`,
-            `INSERT INTO artists(firstname, lastname, stagename, band_id) VALUES ("Jane", "Doe", "Jane Doe", "The Does");`,
-            `INSERT INTO artists(firstname, lastname, stagename) VALUES ("Johnny", "Halliday", "Jonny Halliday");`,
+            `INSERT INTO artists(firstname, lastname, stagename, band_id) VALUES ("John", "Doe", "John Doe", "1");`,
+            `INSERT INTO artists(firstname, lastname, stagename, band_id) VALUES ("Jane", "Doe", "Jane Doe", "1");`,
+            `INSERT INTO artists(firstname, lastname, stagename) VALUES ("Johnny", "Halliday", "Johnny Halliday");`,
 
 
             // --- worked_on ---
@@ -94,8 +95,17 @@ export class Database
                 UNIQUE(name)
 			);`,
 
-            // insert genre example
+            // insert genres
             `INSERT INTO genres values ('Rock');`,
+            `INSERT INTO genres values ('Pop');`,
+            `INSERT INTO genres values ('Metal');`,
+            `INSERT INTO genres values ('Jazz');`,
+            `INSERT INTO genres values ('Electro');`,
+            `INSERT INTO genres values ('Folk');`,
+            `INSERT INTO genres values ('Blues');`,
+            `INSERT INTO genres values ('Reggae');`,
+            `INSERT INTO genres values ('Classique');`,
+            `INSERT INTO genres values ('Other');`,
 
 
         ];
