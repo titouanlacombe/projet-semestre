@@ -2,7 +2,7 @@ import { SearchSong } from "../../Search/SearchSong.js";
 import { Album } from "../../Models/Album.js";
 import { Artist } from "../../Models/Artist.js";
 import { Title } from "../../Models/Title.js";
-import { Viewer } from "../../Components/Viewer/Viewer.js";
+import { openAlbum, openArtist } from "../../Components/Viewer/Viewer.js";
 
 async function launchSearch(event)
 {
@@ -24,21 +24,24 @@ async function launchSearch(event)
         }
     }
 
-
-
-
 }
 
-// TODO: Insert albums images
+
 function displayResults(results)
 {
     console.log(results.length);
 
-    let resultsDiv = document.getElementById('results');
-    resultsDiv.remove();
+    // Remove all divs with "container" class
+    const containerDivs = document.querySelectorAll('.container');
 
-    resultsDiv = document.createElement('div');
+    containerDivs.forEach(div =>
+    {
+        div.remove();
+    });
+
+    let resultsDiv = document.createElement('div');
     resultsDiv.id = "results";
+    resultsDiv.className = "container";
     document.getElementById('player').appendChild(resultsDiv);
 
     resultsDiv.style.display = "block";
@@ -77,31 +80,36 @@ function displayResults(results)
         if (titleDivs.length > 0) {
             let title = document.createElement('div')
             title.className = "header";
-            title.innerHTML = "Titles";
+            let titleHead = document.createElement('h2');
+            titleHead.innerHTML = "Titres";
+            title.appendChild(titleHead);
             resultsDiv.appendChild(title);
         }
 
         titleDivs.forEach(element =>
         {
             console.log(element);
-            element[0].onclick = () =>
-            {
-                Viewer.openTitle(element[1]);
-            }
+            // element[0].onclick = () =>
+            // {
+            //     openTitle(element[1]);
+            // }
             resultsDiv.appendChild(element[0]);
         });
 
         if (albumDivs.length > 0) {
             let album = document.createElement('div')
             album.className = "header";
-            album.innerHTML = "Albums";
+            let albumHead = document.createElement('h2');
+            albumHead.innerHTML = "Albums";
+            album.appendChild(albumHead);
             resultsDiv.appendChild(album);
         }
         albumDivs.forEach(element =>
         {
             element[0].onclick = () =>
             {
-                Viewer.openAlbum(element[1]);
+                console.log(element[1]);
+                openAlbum(element[1]);
             }
             resultsDiv.appendChild(element[0]);
         });
@@ -109,25 +117,39 @@ function displayResults(results)
         if (artistDivs.length > 0) {
             let artist = document.createElement('div')
             artist.className = "header";
-            artist.innerHTML = "Artists";
+            let artistHead = document.createElement('h2');
+            artistHead.innerHTML = "Artistes";
+            artist.appendChild(artistHead);
             resultsDiv.appendChild(artist);
         }
         artistDivs.forEach(element =>
         {
             element[0].onclick = () =>
             {
-                Viewer.openArtist(element[1]);
+                openArtist(element[1]);
             }
             resultsDiv.appendChild(element[0]);
         });
 
 
     }
-    // TODO: Case where no results
+
     else {
         let noResults = document.createElement('div');
-        noResults.className = "noResults";
-        noResults.innerHTML = "No results";
+        noResults.className = "header";
+        let noResHeader = document.createElement('h2');
+        noResHeader.innerHTML = "Aucun résultat";
+        noResults.appendChild(noResHeader);
+
+        // add close button
+        let closeButton = document.createElement('button');
+        closeButton.className = "close-button";
+        closeButton.innerHTML = "&times;";
+        closeButton.onclick = () =>
+        {
+            resultsDiv.remove();
+        }
+        noResults.appendChild(closeButton);
         resultsDiv.appendChild(noResults);
     }
 
