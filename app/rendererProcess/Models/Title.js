@@ -14,14 +14,28 @@ export class Title extends Model
         return this.all(`WHERE name LIKE '%${name}%'`);
     }
 
+    static async getTitles()
+    {
+        return Title.all();
+    }
+
     async artists()
     {
-        return Database.sql(`
-			SELECT * FROM artists
+        return this.all(`
 			LEFT JOIN worked_on ON artist_id = artists._rowid_
-			WHERE title_id = ${this._rowid_};`,
-            [], "all"
+			WHERE title_id = ${this._rowid_};`
         );
+    }
+
+    async artist()
+    {
+        let object = await Database.sql(`
+            SELECT * FROM artists
+            LEFT JOIN albums ON artist_id = artists._rowid_
+            WHERE albums.rowid = ${this.album_id};`,
+            [], "get"
+        );
+        return Artist.generateModel(object);
     }
 
     async genre()
@@ -39,6 +53,44 @@ export class Title extends Model
         return File.find(this.file_id);
     }
 
+    async removeTitle()
+    {
+        return Database.sql(`
+            DELETE FROM titles WHERE rowid = ${this.rowid}`
+        );
+    }
+
+    async updateGenre(genre_id)
+    {
+        return Database.sql(`
+            UPDATE titles
+            SET genre_id = (SELECT rowid FROM genres WHERE name = '${genre_id}')
+            WHERE _rowid_ = ${this.rowid}
+        `);
+    }
+
+    async removeFromAlbum()
+    {
+        return Database.sql(`
+            UPDATE titles
+            SET album_id = NULL
+            WHERE _rowid_ = ${this.rowid}
+        `);
+    }
+
+    async update(artist_id)
+    {
+        let artistId = await Artist.searchid(artist_id);
+
+        return Database.sql(`
+            UPDATE titles
+            SET album_id = (SELECT rowid FROM albums WHERE artist_id = '${artistId.rowid}'),
+            name = '${this.name}',
+            genre_id = (SELECT rowid FROM genres WHERE name is '${this.genre_id}'),
+            file_id = (SELECT rowid FROM files WHERE path is '${this.file_id}')
+            WHERE _rowid_ = ${this.rowid}
+        `);
+    }
 
     async create()
     {
@@ -49,7 +101,6 @@ export class Title extends Model
                 this[key] = 'null';
             }
         }
-
 
         console.log("Insert request : ");
         console.log(`
@@ -159,7 +210,7 @@ export class Title extends Model
         console.log('data : ' + data);
 
         if (stopError === false && data === true) {
-            document.getElementsByClassName("container")[0].remove();
+
             try {
                 await this.create();
                 alert("Titre créé avec succès !");
