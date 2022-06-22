@@ -47,7 +47,7 @@ L’utilisateur sera capable de :
   - Effectuer une recherche au sein de la base de données
   - Importer la liste et les chemins vers les fichiers musicaux qu’il possède
 
-Toutes ces actions seront réalisables à partir de l’information utilisateur de l’application (GUI).
+Toutes ces actions seront réalisables à partir de l’interface utilisateur de l’application (GUI).
 
 ### Extensions possibles
 
