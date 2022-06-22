@@ -1,22 +1,26 @@
-import { Title } from "../Models/Title.js";
-import { Album } from "../Models/Album.js";
-import { Artist } from "../Models/Artist.js";
-import { Band } from "../Models/Band.js";
-import { Genre } from "../Models/Genre.js";
+import { Title } from "../../Models/Title.js";
+import { Album } from "../../Models/Album.js";
+import { Artist } from "../../Models/Artist.js";
+import { Band } from "../../Models/Band.js";
+import { Genre } from "../../Models/Genre.js";
 
 console.log('Loaded');
 
-// Listener function to add new title
-window.electronAPI.onNewTitle(async (_event, value) =>
+export { titleForm, artistForm, albumForm };
+
+async function titleForm(title = null)
 {
+    console.log(title);
     let genres = await Genre.getGenres();
     console.log(genres);
 
-    // Remove any container divs
-    let containerDivs = document.getElementsByClassName("container");
-    for (let div of containerDivs) {
+    // Remove all divs with "container" class
+    const containerDivs = document.querySelectorAll('.container');
+
+    containerDivs.forEach(div =>
+    {
         div.remove();
-    }
+    });
 
     let containerDiv = document.createElement("div");
     containerDiv.className = "container";
@@ -25,7 +29,10 @@ window.electronAPI.onNewTitle(async (_event, value) =>
     let headerDiv = document.createElement("div");
     headerDiv.className = "header";
     let h2 = document.createElement("h2");
-    h2.innerHTML = "Nouveau Titre";
+    if (!title)
+        h2.innerHTML = "Nouveau Titre";
+    else
+        h2.innerHTML = "Modifier Titre";
     headerDiv.append(h2);
     // close button
     let closeButton = document.createElement("button");
@@ -54,6 +61,8 @@ window.electronAPI.onNewTitle(async (_event, value) =>
     input.type = "text";
     input.name = "title";
     input.placeholder = "Titre";
+    if (title)
+        input.value = title.name;
 
     fcDiv.append(input);
     fcDiv.append(label);
@@ -71,6 +80,12 @@ window.electronAPI.onNewTitle(async (_event, value) =>
     input.name = "artist";
     input.placeholder = "Artiste";
 
+    if (title) {
+        let artist = await title.artist();
+        input.value = artist.stagename;
+    }
+
+
     fcDiv.append(input);
     fcDiv.append(label);
 
@@ -87,16 +102,22 @@ window.electronAPI.onNewTitle(async (_event, value) =>
     input.id = "genre";
     input.className = "select";
     // add options to select
+    let titleGenre = null;
+    if (title)
+        titleGenre = await title.genre();
     for (let genre of genres) {
         let option = document.createElement("option");
         option.value = genre.name;
         option.innerHTML = genre.name;
+        if (titleGenre === genre)
+            option.selected = true;
         input.append(option);
     }
     let option = document.createElement("option");
     option.value = "Genre";
     option.innerHTML = "Genre";
-    option.selected = true;
+    if (!titleGenre)
+        option.selected = true;
     input.append(option);
 
     fcDiv.append(input);
@@ -113,6 +134,10 @@ window.electronAPI.onNewTitle(async (_event, value) =>
     input.type = "text";
     input.name = "album";
     input.placeholder = "Album";
+    if (title) {
+        let titleAlbum = await title.album();
+        input.value = titleAlbum.name;
+    }
 
     fcDiv.append(input);
     fcDiv.append(label);
@@ -129,6 +154,11 @@ window.electronAPI.onNewTitle(async (_event, value) =>
     input.type = "text";
     input.name = "file";
     input.placeholder = "Fichier";
+    if (title) {
+        let titleFile = await title.file();
+        if (titleFile)
+            input.value = titleFile.name;
+    }
 
     fcDiv.append(input);
     fcDiv.append(label);
@@ -138,22 +168,73 @@ window.electronAPI.onNewTitle(async (_event, value) =>
     // Submit form button
     let submitButton = document.createElement("button");
     submitButton.className = "submit-button";
-    submitButton.innerHTML = "Ajouter";
+    if (!title)
+        submitButton.innerHTML = "Ajouter";
+    else
+        submitButton.innerHTML = "Modifier";
     submitButton.type = "submit";
     // create new title on click
-    submitButton.addEventListener("click", (event) =>
-    {
-        event.preventDefault();
-        nouveauTitre(form);
-    });
+    if (title)
+        submitButton.addEventListener("click", async (event) =>
+        {
+            event.preventDefault();
+            modifierTitre(title.rowid, form);
+            containerDiv.remove();
+        });
+    else
+        submitButton.addEventListener("click", (event) =>
+        {
+            event.preventDefault();
+            nouveauTitre(form);
+            containerDiv.remove();
+        });
 
 
     form.append(submitButton);
+}
+
+// Listener function to add new title
+window.electronAPI.onNewTitle(async (_event, value) =>
+{
+    titleForm();
 
 });
 
+// Send modified title to database
+async function modifierTitre(id, form)
+{
+    console.log(form);
+    let title = form.title.value;
+    let artist = form.artist.value;
+    let genre = form.genre.value;
+    let album = form.album.value;
+    let file = form.file.value;
+    console.log(title, artist, genre, album, file);
+
+    // create new Title object
+    let newTitle = new Title();
+    newTitle.rowid = id;
+    newTitle.name = title;
+    newTitle.genre_id = genre;
+    // faire liaisons autre tables si besoin
+    newTitle.album_id = album;
+    newTitle.file_id = file;
+
+    console.log(newTitle.table);
+
+    try {
+        await newTitle.update(artist);
+        alert("Titre modifié");
+    }
+    catch (error) {
+        console.log(error);
+        alert("Erreur lors de la modification du titre");
+    }
+
+}
+
 // Send new title to database
-function nouveauTitre(form)
+async function nouveauTitre(form)
 {
     console.log(form);
     let title = form.title.value;
@@ -172,19 +253,55 @@ function nouveauTitre(form)
     newTitle.file_id = file;
 
     console.log(newTitle.table);
+    try {
+        await newTitle.createTitle(artist);
+    } catch (error) {
+        alert("Erreur lors de la création du titre");
+    }
 
-    newTitle.createTitle(artist);
 
 }
 
 // Listener function to add new album
 window.electronAPI.onNewAlbum((_event, value) =>
 {
-    // Remove any container divs
-    let containerDivs = document.getElementsByClassName("container");
-    for (let div of containerDivs) {
-        div.remove();
+    albumForm();
+});
+
+async function modifierAlbum(id, form)
+{
+
+    console.log(form);
+    let name = form.name.value;
+    let artist = form.artist.value;
+    let date = form.releaseDate.value;
+    console.log(date);
+
+    let album = new Album();
+    album.rowid = id;
+    album.name = name;
+    album.artist_id = artist;
+    album.released_at = date;
+
+    try {
+        await album.update();
+        alert("Album modifié");
     }
+    catch (error) {
+        console.log(error);
+        alert("Erreur lors de la modification de l'album");
+    }
+}
+
+async function albumForm(album = null)
+{
+    // Remove all divs with "container" class
+    const containerDivs = document.querySelectorAll('.container');
+
+    containerDivs.forEach(div =>
+    {
+        div.remove();
+    });
 
     let containerDiv = document.createElement("div");
     containerDiv.className = "container";
@@ -193,7 +310,10 @@ window.electronAPI.onNewAlbum((_event, value) =>
     let headerDiv = document.createElement("div");
     headerDiv.className = "header";
     let h2 = document.createElement("h2");
-    h2.innerHTML = "Nouvel Album";
+    if (album)
+        h2.innerHTML = "Modifier album";
+    else
+        h2.innerHTML = "Nouvel Album";
     headerDiv.append(h2);
     // close button
     let closeButton = document.createElement("button");
@@ -222,6 +342,8 @@ window.electronAPI.onNewAlbum((_event, value) =>
     input.type = "text";
     input.name = "name";
     input.placeholder = "Nom";
+    if (album)
+        input.value = album.name;
 
     fcDiv.append(input);
     fcDiv.append(label);
@@ -237,6 +359,10 @@ window.electronAPI.onNewAlbum((_event, value) =>
     input.type = "text";
     input.name = "artist";
     input.placeholder = "Artiste";
+    if (album) {
+        let artist = await album.artist();
+        input.value = artist.stagename;
+    }
 
     fcDiv.append(input);
     fcDiv.append(label);
@@ -249,9 +375,11 @@ window.electronAPI.onNewAlbum((_event, value) =>
     label = document.createElement("label");
     label.innerHTML = "Date de sortie";
     input = document.createElement("input");
-    input.type = "date";
+    input.type = "text";
     input.name = "releaseDate";
     input.placeholder = "Date de sortie";
+    if (album)
+        input.value = album.released_at;
 
     fcDiv.append(input);
     fcDiv.append(label);
@@ -261,21 +389,32 @@ window.electronAPI.onNewAlbum((_event, value) =>
     // Submit form button
     let submitButton = document.createElement("button");
     submitButton.className = "submit-button";
-    submitButton.innerHTML = "Ajouter";
+    if (!album)
+        submitButton.innerHTML = "Ajouter";
+    else
+        submitButton.innerHTML = "Modifier";
     submitButton.type = "submit";
     // create new album on click
-    submitButton.addEventListener("click", (event) =>
-    {
-        event.preventDefault();
-        nouvelAlbum(form);
-    });
+    if (album)
+        submitButton.addEventListener("click", async (event) =>
+        {
+            event.preventDefault();
+            modifierAlbum(album.rowid, form);
+            containerDiv.remove();
+        });
+    else
+        submitButton.addEventListener("click", (event) =>
+        {
+            event.preventDefault();
+            nouvelAlbum(form);
+            containerDiv.remove();
+        });
 
     form.append(submitButton);
+}
 
-});
 
-
-function nouvelAlbum(form)
+async function nouvelAlbum(form)
 {
     console.log(form);
     let name = form.name.value;
@@ -289,18 +428,25 @@ function nouvelAlbum(form)
     newAlbum.artist_id = artist;
     newAlbum.release_date = releaseDate;
 
-    newAlbum.createAlbum();
+    try {
+        await newAlbum.createAlbum();
+    } catch (error) {
+        alert("Erreur lors de la création de l'album");
+    }
+
 
 }
 
-// Listener function to add new artist
-window.electronAPI.onNewArtist((_event, value) =>
+async function artistForm(artist = null)
 {
-    // Remove any container divs
-    let containerDivs = document.getElementsByClassName("container");
-    for (let div of containerDivs) {
+    console.log(artist);
+    // Remove all divs with "container" class
+    const containerDivs = document.querySelectorAll('.container');
+
+    containerDivs.forEach(div =>
+    {
         div.remove();
-    }
+    });
 
     let containerDiv = document.createElement("div");
     containerDiv.className = "container";
@@ -309,7 +455,10 @@ window.electronAPI.onNewArtist((_event, value) =>
     let headerDiv = document.createElement("div");
     headerDiv.className = "header";
     let h2 = document.createElement("h2");
-    h2.innerHTML = "Nouvel Artiste";
+    if (artist)
+        h2.innerHTML = "Modifier artiste";
+    else
+        h2.innerHTML = "Nouvel Artiste";
     headerDiv.append(h2);
     // close button
     let closeButton = document.createElement("button");
@@ -338,6 +487,8 @@ window.electronAPI.onNewArtist((_event, value) =>
     input.type = "text";
     input.name = "firstname";
     input.placeholder = "Prénom";
+    if (artist && artist.firstname)
+        input.value = artist.firstname;
 
     fcDiv.append(input);
     fcDiv.append(label);
@@ -353,6 +504,9 @@ window.electronAPI.onNewArtist((_event, value) =>
     input.type = "text";
     input.name = "lastname";
     input.placeholder = "Nom";
+    if (artist && artist.lastname)
+        input.value = artist.lastname;
+
 
     fcDiv.append(input);
     fcDiv.append(label);
@@ -368,6 +522,8 @@ window.electronAPI.onNewArtist((_event, value) =>
     input.type = "text";
     input.name = "stageName";
     input.placeholder = "Nom de scène";
+    if (artist && artist.stagename)
+        input.value = artist.stagename;
 
     fcDiv.append(input);
     fcDiv.append(label);
@@ -383,6 +539,11 @@ window.electronAPI.onNewArtist((_event, value) =>
     input.type = "text";
     input.name = "bandName";
     input.placeholder = "Nom de groupe";
+    if (artist) {
+        let bandName = await artist.band();
+        if (bandName)
+            input.value = bandName.name;
+    }
 
     fcDiv.append(input);
     fcDiv.append(label);
@@ -392,21 +553,63 @@ window.electronAPI.onNewArtist((_event, value) =>
     // Submit form button
     let submitButton = document.createElement("button");
     submitButton.className = "submit-button";
-    submitButton.innerHTML = "Ajouter";
+    if (!artist)
+        submitButton.innerHTML = "Ajouter";
+    else
+        submitButton.innerHTML = "Modifier";
     submitButton.type = "submit";
     // create new artist on click
-    submitButton.addEventListener("click", (event) =>
-    {
-        event.preventDefault();
-        nouvelArtist(form);
-    });
+    if (artist)
+        submitButton.addEventListener("click", (event) =>
+        {
+            event.preventDefault();
+            updateArtist(artist.rowid, form);
+            containerDiv.remove();
+        });
+    else
+        submitButton.addEventListener("click", (event) =>
+        {
+            event.preventDefault();
+            nouvelArtist(form);
+            containerDiv.remove();
+        });
 
     form.append(submitButton);
+}
 
+// Listener function to add new artist
+window.electronAPI.onNewArtist((_event, value) =>
+{
+    artistForm();
 });
 
+// Send modified artist to database
+async function updateArtist(id, form)
+{
+    let firstname = form.firstname.value;
+    let lastname = form.lastname.value;
+    let stageName = form.stageName.value;
+    let bandName = form.bandName.value;
+
+    let artist = new Artist();
+    artist.rowid = id;
+    artist.firstname = firstname;
+    artist.lastname = lastname;
+    artist.stagename = stageName;
+    artist.band_id = bandName;
+
+    try {
+        await artist.update();
+        alert("Artiste modifié");
+    }
+    catch (error) {
+        console.log(error);
+        alert("Erreur lors de la modification de l'artiste");
+    }
+}
+
 // Send new artist to database
-function nouvelArtist(form)
+async function nouvelArtist(form)
 {
     console.log(form);
     let firstname = form.firstname.value;
@@ -421,17 +624,24 @@ function nouvelArtist(form)
     newArtist.lastname = lastname;
     newArtist.stagename = stageName;
     newArtist.band_id = bandName;
+    try {
+        newArtist.createArtist();
+    } catch (error) {
+        console.log(error);
+        alert("Erreur lors de la création de l'artiste");
+    }
 
-    newArtist.createArtist();
 }
 
 window.electronAPI.onNewBand((_event, value) =>
 {
-    // Remove any container divs
-    let containerDivs = document.getElementsByClassName("container");
-    for (let div of containerDivs) {
+    // Remove all divs with "container" class
+    const containerDivs = document.querySelectorAll('.container');
+
+    containerDivs.forEach(div =>
+    {
         div.remove();
-    }
+    });
 
     let containerDiv = document.createElement("div");
     containerDiv.className = "container";
