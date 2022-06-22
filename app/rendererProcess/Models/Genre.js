@@ -18,7 +18,11 @@ export class Genre extends Model
         );
     }
 
-    // TODO : Either fix all() or use another method to get the genres
+    static async searchBis(id)
+    {
+        return this.get(`WHERE rowid = ${id}`);
+    }
+
     static async getGenres()
     {
         return Genre.all();
