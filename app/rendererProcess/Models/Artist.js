@@ -1,11 +1,12 @@
 import { Model } from "./Model.js";
 import { Band } from "./Band.js";
 import { Database } from "../Database/Database.js";
+import { Title } from "./Title.js";
+import { Album } from "./Album.js";
 
 export class Artist extends Model
 {
     static table = "artists";
-
 
     static async searchid(name)
     {
@@ -14,6 +15,35 @@ export class Artist extends Model
             [], 'get'
         );
 
+    }
+
+    static async getArtists()
+    {
+        return this.all();
+    }
+
+    static async searchBis(id)
+    {
+        return this.get(`WHERE rowid = ${id}`);
+    }
+
+    async update()
+    {
+
+        if (this.band_id === '') this.band_id = null;
+        else {
+            let bandId = await Band.searchid(this.band_id);
+            if (bandId) {
+                this.band_id = bandId.rowid;
+            }
+        }
+        return Database.sql(`
+            UPDATE artists 
+            SET stagename = '${this.stagename}',
+            firstname = '${this.firstname}',
+            lastname = '${this.lastname}',
+            band_id = ${this.band_id}
+            WHERE rowid = ${this.rowid}`);
     }
 
     static async search(name)
@@ -58,19 +88,26 @@ export class Artist extends Model
         return name;
     }
 
+    async albums()
+    {
+        return Album.all(`WHERE artist_id = ${this.rowid}`);
+    }
+
     async titles()
     {
-        return Database.sql(`
-			SELECT * FROM titles
-			LEFT JOIN worked_on ON title_id = title._rowid_
-			WHERE artist_id = ${this._rowid_};`,
-            [], "all"
-        );
+        return Title.all(`WHERE album_id = (SELECT rowid from albums where artist_id = ${this.rowid}) `);
     }
 
     async band()
     {
         return Band.find(this.band_id);
+    }
+
+    async removeArtist()
+    {
+        return Database.sql(`
+            DELETE FROM artists WHERE rowid = ${this.rowid}`
+        );
     }
 
     async create()
@@ -126,7 +163,7 @@ export class Artist extends Model
         }
 
         if (stopError === false && data === true) {
-            document.getElementsByClassName("container")[0].remove();
+
             try {
                 await this.create();
                 alert("Artiste créé avec succès.");
