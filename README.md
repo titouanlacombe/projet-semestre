@@ -57,4 +57,6 @@ Toutes ces actions seront réalisables à partir de l’information utilisateur 
 - Streaming (fichiers many to many + polymorphisme de la source d’un titre: fichier / web stream)
 - Playlists (playlistes manuelles + playlistes dynamiques)
 
+---
+
 ![Such WOW](https://upload.wikimedia.org/wikipedia/commons/d/df/Doge_homemade_meme.jpg)
