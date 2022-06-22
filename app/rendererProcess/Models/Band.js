@@ -15,6 +15,11 @@ export class Band extends Model
 
     }
 
+    static async getBands()
+    {
+        return this.all();
+    }
+
     static async search(name)
     {
         return this.all(`WHERE name LIKE '%${name}%'`);
@@ -22,13 +27,20 @@ export class Band extends Model
 
     async artists()
     {
-        return Artist.all(`WHERE band_id = ${this._rowid_}`);
+        return Artist.all(`WHERE band_id = ${this.rowid}`);
+    }
+
+    async removeArtist(id)
+    {
+        return Database.sql(`
+            UPDATE artists SET band_id = NULL WHERE rowid = ${id}`,
+        );
     }
 
     async create()
     {
         return Database.sql(`
-            INSERT INTO bands(name) VALUES ('${this.name}')`,
+            INSERT INTO bands(name) VALUES('${this.name}')`,
             [], 'get'
         );
     }
