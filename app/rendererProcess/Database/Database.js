@@ -5,7 +5,7 @@ export class Database
     static async getVersion()
     {
         // Uncomment when experimenting with DB
-        return null;
+        // return null;
         return (await this.sql("PRAGMA user_version", [], "get")).user_version;
     }
 
@@ -24,7 +24,6 @@ export class Database
             // --- Database version ---
             `PRAGMA user_version = ${this.version}`,
 
-            //TODO: add to UML
             // --- albums ---
             `CREATE TABLE albums (
 				name TEXT NOT NULL,                
@@ -54,7 +53,6 @@ export class Database
                 UNIQUE(stagename)
 			);`,
             `INSERT INTO artists VALUES ('MezzanineArtist', 'MezzanineArtist', 'MezzanineArtist', 1)`,
-            `INSERT INTO artists VALUES ('MezzanineIIArtist', 'MezzanineIIArtist', 'MezzanineIIArtist', 2)`,
 
 
             `INSERT INTO artists(firstname, lastname, stagename) VALUES ("Antoine", "Daniel", "Antoine Daniel");`,
@@ -67,12 +65,12 @@ export class Database
 
 
 
-            // --- worked_on ---
-            `CREATE TABLE worked_on (
-				artist_id INTEGER NOT NULL,
-				title_id INTEGER NOT NULL,
-				jobtype TEXT NOT NULL
-			);`,
+            /*             // --- worked_on ---
+                        `CREATE TABLE worked_on (
+                            artist_id INTEGER NOT NULL,
+                            title_id INTEGER NOT NULL,
+                            jobtype TEXT NOT NULL
+                        );`, */
 
             // --- titles ---
             `CREATE TABLE titles (
@@ -83,7 +81,11 @@ export class Database
 				released_at TEXT,
                 UNIQUE(name, album_id)
 			);`,
-            `INSERT INTO titles(name, file_id) VALUES ('MezzanineTitle', '...')`,
+
+            // Insert 3 titles in Mezzanine
+            `INSERT INTO titles(name, genre_id, album_id, released_at) VALUES ('Mezzanine', 1, 1, '2018-01-01')`,
+            `INSERT INTO titles(name, genre_id, album_id, released_at) VALUES ('Mezzanine II', 2, 1, '2018-01-01')`,
+            `INSERT INTO titles(name, genre_id, album_id, released_at) VALUES ('Allumer le feu', 3, 1, '2018-01-01')`,
 
             // --- files ---
             `CREATE TABLE files (
