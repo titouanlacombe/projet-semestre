@@ -40,11 +40,23 @@ const template = [
             {
                 label: 'Ajouter',
                 submenu: [
-                    { label: 'Titre', click: () => mainWindow.webContents.send('update-title', 1) },
-                    { label: 'Artiste', click: () => mainWindow.webContents.send('update-artist', 1) },
-                    { label: 'Album', click: () => mainWindow.webContents.send('update-album', 1) },
+                    { label: 'Titre', click: () => mainWindow.webContents.send('new-title', 1) },
+                    { label: 'Artiste', click: () => mainWindow.webContents.send('new-artist', 1) },
+                    { label: 'Album', click: () => mainWindow.webContents.send('new-album', 1) },
                     // new band
-                    { label: 'Groupe', click: () => mainWindow.webContents.send('update-band', 1) },
+                    { label: 'Groupe', click: () => mainWindow.webContents.send('new-band', 1) },
+                ]
+
+            },
+            // separator
+            { type: 'separator' },
+            {
+                label: "Afficher",
+                submenu: [
+                    { label: 'Titres', click: () => mainWindow.webContents.send('display-title', 1) },
+                    { label: 'Artistes', click: () => mainWindow.webContents.send('display-artist', 1) },
+                    { label: 'Albums', click: () => mainWindow.webContents.send('display-album', 1) },
+                    { label: 'Groupes', click: () => mainWindow.webContents.send('display-band', 1) },
                 ]
             }
         ]
