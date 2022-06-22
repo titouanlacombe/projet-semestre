@@ -56,7 +56,7 @@ body {
 }
 
 #player {
-    position: relative;
+  position: relative;
   /* Same as the width of the sidenav */
   margin-left: 212px;
   /* padding: 10px; */
@@ -67,7 +67,7 @@ body {
 }
 
 #player h1 {
-    z-index: 1;
+  z-index: 1;
   margin-top: auto;
   padding: 40px 0px 15px 0px;
   text-align: center;
@@ -140,22 +140,22 @@ body {
   /* transition: width 0.5s ease-out; */
 }
 
-
 /* .topnav input[type="search"]:hover, .topnav input[type="search"]:focus {
     width: 300px;
 } */
 
 .topnav button {
-    float: right;
-    display: block;
-    padding: 7px 10px;
-    margin: 5px 4px 0 0;
-    color: rgb(148 113 239);
-    border: 2px solid rgb(148 113 239);
-    background-color: #3f3066;
-    font-size: 17px;
-    cursor: pointer;
-    border-radius: 5px;
+  float: right;
+  display: block;
+  padding: 7px 10px;
+  margin: 5px 4px 0 0;
+  color: rgb(148 113 239);
+  border: 2px solid rgb(148 113 239);
+  background-color: #3f3066;
+  font-size: 17px;
+  cursor: pointer;
+  border-radius: 5px;
+}
 
 .topnav input[type="search"]:hover,
 .topnav input[type="search"]:focus {
@@ -173,11 +173,10 @@ body {
   font-size: 17px;
   cursor: pointer;
   border-radius: 5px;
-
 }
 
 .topnav input {
-    margin-right: 4px;
+  margin-right: 4px;
 }
 
 .topnav button:hover {
@@ -187,63 +186,152 @@ body {
 }
 
 #results {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 500px;
-    height: 500px;
-    margin: 0 auto;
-    transform: translate(-50%, -50%);
-    overflow-y: scroll;
-    overflow-x: hidden;
-    background-color: #3f3066;
-    display: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 500px;
+  height: 500px;
+  margin: 0 auto;
+  transform: translate(-50%, -50%);
+  overflow-y: scroll;
+  overflow-x: hidden;
+  background-color: #3f3066;
+  display: none;
 
-    box-shadow: 0 0 3px #000000;
+  box-shadow: 0 0 3px #000000;
 }
 
 #results::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
 
 #results div {
-    padding: 10px;
-    border-bottom: black solid 1px;
+  padding: 10px;
+  border-bottom: black solid 1px;
+}
+
+#results :where(.title, .album, .artist) {
+  background-color: #3f3066;
 }
 
 #results :where(.title, .album, .artist):hover {
-    background-color: #5b4495;
+  background-color: #5b4495;
 }
 
-#results .header {
-    font-size: 20px;
-    text-align: center;
+#album,
+#artist,
+#title {
+  position: absolute;
+  top: 60px;
+  left: 5%;
+  max-height: calc(90% - 50px);
+  width: 90%;
+  background-color: #220229;
+  overflow-y: scroll;
 }
 
-#album {
-    position: absolute;
-    top: 60px;
-    left: 5%;
-    height: calc(90% - 50px);
-    width: 90%;
-    background-color: #000000;
-}
-
-#album .flex2 {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
+#album::-webkit-scrollbar,
+#artist::-webkit-scrollbar,
+#title::-webkit-scrollbar {
+  display: none;
 }
 
 .flex2 div {
-    width: 50%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+  width: 50%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 10px;
+  padding: 10px;
+  background: grey;
+  border-radius: 4px;
 }
+
+.albums,
+.artists,
+.titles {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #220229;
+  border-radius: 4px;
+}
+
+/* #album div,
+#artist div,
+#title div {
+  padding: 10px;
+  margin: 10px;
+  display: flex;
+  border-radius: 5px;
+} */
+
+.flex2 {
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  display: flex;
+  margin: 10px;
+}
+
+#songs,
+#albums,
+#artists {
+  margin: 20px !important;
+}
+
+.song,
+.album,
+.artist,
+.title {
+  background: grey;
+  padding: 15px;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 5px;
+  margin: 10px;
+  display: flex;
+}
+
+.album,
+.artist,
+.title {
+  justify-content: center;
+}
+
+.singlealbum,
+.singletitle,
+.singleartist {
+  width: 90%;
+  justify-content: space-between;
+  background: grey;
+  border-bottom: black solid 1px;
+  align-items: center;
+  margin: 10px;
+  border-radius: 5px;
+  padding: 10px;
+  display: flex;
+}
+
+.singleband {
+  display: flex;
+  flex-direction: column;
+  background: purple;
+  margin: 10px;
+  border-radius: 4px;
+  padding: 10px;
+}
+
+.end {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
 .container {
   position: absolute;
   top: calc(10% + 50px);
@@ -254,6 +342,12 @@ body {
   overflow: hidden;
   width: 400px;
   max-width: 100%;
+  max-height: calc(90% - 50px);
+  overflow-y: scroll;
+}
+
+.container::-webkit-scrollbar {
+  display: none;
 }
 
 .header {
@@ -275,8 +369,20 @@ body {
   font-size: 16px;
   padding: 10px;
   margin-left: 20px;
-  width: 20%;
-  align-self: flex-end;
+  width: 50px;
+}
+
+.edit-button {
+  background-color: #8e44ad;
+  border: 2px solid #8e44ad;
+  border-radius: 4px;
+  color: #fff;
+  display: inline-block;
+  font-family: inherit;
+  font-size: 16px;
+  padding: 10px;
+  margin-left: 20px;
+  min-width: 45px;
 }
 
 .header h2 {
@@ -302,7 +408,7 @@ body {
   flex-direction: column-reverse;
 }
 
-.form-control label {
+label {
   display: inline-block;
   margin-bottom: 5px;
   margin-left: 5px;
@@ -318,7 +424,7 @@ input:focus + label {
 }
 
 .form-control input,
-.form-control select {
+select {
   border: 2px solid #f0f0f0;
   border-radius: 4px;
   display: block;
