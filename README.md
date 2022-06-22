@@ -31,8 +31,8 @@ Wavia est une application de gestion de bibliothèque musicale qui utilise une b
 
 ### Technologies
 
-_Electron.js + SQLite_
-Electron est un framework Javascript qui permet de réaliser des applications/logiciels sans passer par un navigateur. Il est notamment utilisé pour le développement de Discord.
+_Electron.js + SQLite_  
+Electron est un framework Javascript qui permet de réaliser des applications/logiciels sans passer par un navigateur. Il est notamment utilisé pour le développement de Discord.  
 SQLite est un langage permettant de dialoguer avec une donnée, il est léger et simple. Nous l’avons choisi car il vient par défaut avec Electron.
 
 ### Features et cas d’utilisations
